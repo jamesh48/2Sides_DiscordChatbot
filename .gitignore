@@ -104,10 +104,17 @@ dist
 .tern-port
 
 # Ignore JavaScript files since these are generated.
-*.js
+dist/*.js
 !jest.config.js
 *.d.ts
 
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+
+permissions.json
+
+postmanConfigs/*.json
+
+.DS_Store

@@ -2,9 +2,16 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "commonjs",
-    "lib": [
-      "es2018"
-    ],
+    "lib": ["es2018"],
+    "baseUrl": "./src",
+    "paths": {
+      "Types": ["types"],
+      "DiscordSecrets": ["functions/utils/DiscordSecrets"],
+      "DiscordBotConstruct": ["constructs/DiscordBotConstruct"],
+      "DiscordBotFunction": ["functions/DiscordBotFunction"],
+      "Index": ["index"]
+      // "ConstructStack": ["lib/construct-stack"],
+    },
     "outDir": "dist/",
     "declaration": true,
     "strict": true,
@@ -20,16 +27,9 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "typeRoots": ["./node_modules/@types"],
     "resolveJsonModule": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "cdk.out",
-    "outputs.json"
-  ]
+  "include": ["src/**/*.ts", "src/types.ts"],
+  "exclude": ["cdk.out", "outputs.json"]
 }

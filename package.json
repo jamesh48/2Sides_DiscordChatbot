@@ -16,8 +16,8 @@
     "watch": "tsc -w",
     "lint": "eslint src/*/*.ts",
     "fix-lint": "eslint src/*/*.ts --fix",
-    "test": "jest",
-    "cdk": "cdk"
+    "test": "mocha",
+    "cdk:deploy": "tsc && cdk deploy DiscordBotStack"
   },
   "jest": {
     "preset": "ts-jest",
@@ -43,9 +43,16 @@
       }
     }
   },
+  "_moduleAliases": {
+    "DiscordSecrets": "dist/functions/utils/DiscordSecrets.js",
+    "DiscordBotFunction": "dist/functions/DiscordBotFunction.js",
+    "Types": "dist/types.js",
+    "Index": "dist/index.js"
+  },
   "devDependencies": {
     "@aws-cdk/assert": "1.104.0",
     "@types/jest": "^26.0.10",
+    "@types/module-alias": "^2.0.1",
     "@types/node": "10.17.27",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
@@ -68,10 +75,15 @@
     "source-map-support": "^0.5.16"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.853.0",
     "aws-sdk-mock": "^5.1.0",
     "axios": "^0.21.1",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "mocha": "^9.1.3",
+    "module-alias": "^2.2.2",
     "requests": "^0.3.0",
     "source-map-support": "^0.5.16",
     "tweetnacl": "^0.14.5"

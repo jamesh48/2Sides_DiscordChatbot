@@ -1,4 +1,4 @@
-export * from './types';
-export * from './functions/utils/DiscordSecrets';
-export * from './constructs/DiscordBotConstruct';
-export { verifyEvent } from './functions/DiscordBotFunction';
+export * from "Types";
+export * from "DiscordSecrets";
+export * from "DiscordBotConstruct";
+export { verifyEvent } from "DiscordBotFunction";

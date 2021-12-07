@@ -2,8 +2,7 @@
  * The available secrets for our Discord server.
  */
 export interface DiscordSecrets {
-  publicKey: string;
-  clientId: string;
+  discordPublicKey: string;
   authToken: string;
   serverId: string;
 }
@@ -32,7 +31,7 @@ export interface DiscordMember {
  * The user information for a Discord member.
  */
 export interface DiscordUser {
-  id: number;
+  id: string;
   username: string;
   discriminator: string;
 }
@@ -44,16 +43,22 @@ export interface DiscordEventRequest {
   timestamp: string;
   signature: string;
   jsonBody: DiscordJsonBody;
+  // Custom Added--->
+  email: string;
+  tempRandToken: string;
+  discordId: string;
+  channels: string[];
 }
 
 /**
  * The actual Discord request data.
  */
 export interface DiscordJsonBody {
-  id?: string,
-  token?: string,
+  id?: string;
+  token?: string;
   data?: DiscordRequestData;
   member?: DiscordMember;
+  user?: DiscordUser;
   type: number;
   version: number;
 }
@@ -64,6 +69,8 @@ export interface DiscordJsonBody {
 export interface DiscordRequestData {
   id: string;
   name: string;
+  kick: string;
+  email: string;
   options?: DiscordRequestDataOption[];
 }
 
@@ -94,4 +101,3 @@ export interface DiscordResponseData {
   allowed_mentions: string[];
   /* eslint-enable camelcase */
 }
-
