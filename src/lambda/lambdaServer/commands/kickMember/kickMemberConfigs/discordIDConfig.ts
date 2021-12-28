@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
+import { UserEmail } from "staticTypes";
 
-export const discordIDConfig = (memberEmail: string) => {
+export const discordIDConfig = (memberEmail: UserEmail) => {
   // @ts-ignore
   const { wixWebsiteName, wixAPIKey } = JSON.parse(process.env.WIX_CREDENTIALS);
   const config: AxiosRequestConfig = {

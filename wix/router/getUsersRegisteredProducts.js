@@ -13,14 +13,6 @@ export const usersRegisteredProducts = async (req) => {
     .eq("discordID", req.query.tempRandToken)
     .find(suppressOptions);
 
-  // // From that array filter out entries that aren't temporary tokens.
-  // const newlyPurchasedProducts = purchasedProductArr.filter((x) => {
-  //     const xidTest = x.discordID?.split('_');
-  //     if (xidTest && xidTest[0] === 'xid') {
-  //         return x;
-  //     }
-  // });
-
   if (!purchasedProductArr.length) {
     throw new Error("No New Products To Register");
   }

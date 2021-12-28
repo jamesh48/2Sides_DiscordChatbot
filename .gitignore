@@ -118,3 +118,7 @@ permissions.json
 postmanConfigs/*.json
 
 .DS_Store
+
+outputSheet.csv
+PurchasedCandidatesExisting.numbers
+testSheet.csv

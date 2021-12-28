@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
+import { DiscordId } from "staticTypes";
 
-export const deleteNewUserRoleConfig = (discordId: string) => {
+export const deleteNewUserRoleConfig = (discordId: DiscordId) => {
   const {
     discordAuthToken,
     discordGuildID,

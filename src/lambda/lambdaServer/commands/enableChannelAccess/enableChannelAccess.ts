@@ -1,34 +1,47 @@
-import axios from "axios";
-import { getUsersRegisteredProductsConfig } from "./enableChannelAccessConfigs/getUsersRegisteredProductsConfig";
+import axios, { AxiosResponse } from "axios";
 import { grantAccessToPrivateChannels } from "./enableChannelAccessUtils/grantAccessUtilsIndex";
-import { putMemberRoleConfig } from "./enableChannelAccessConfigs/putMemberRoleConfig";
-import { deleteNewUserRoleConfig } from "./enableChannelAccessConfigs/deleteNewUserRoleConfig";
 
-export async function enableChannelAccess(
-  userEmail: string,
-  discordId: string,
-  tempRandToken: string
-) {
-  // Todo-> Test if email matches purchased paid plan before the following logic.
+import {
+  putMemberRoleConfig,
+  deleteNewUserRoleConfig,
+  getUsersRegisteredProductsConfig
+} from "./enableChannelAccessConfigs/_enableChannelAccessConfigIndex";
 
-  // Changes the role from New User to Member--->
-  await axios(putMemberRoleConfig(discordId));
-  await axios(deleteNewUserRoleConfig(discordId));
-  // ------------------------------------------>
+import { getAccessCodeParams, getUserParams } from "./authConfigs/authConfigIndex";
 
-  const {
-    data: { message: purchasedProductArr }
-  } = await axios(
-    getUsersRegisteredProductsConfig(userEmail, discordId, tempRandToken)
+import { CodeFromDiscord, DiscordChannel } from "staticTypes";
+
+export async function enableChannelAccess(code: CodeFromDiscord) {
+  // Get Access Code
+  const { data: oAuthData } = await axios.post(
+    "https://discord.com/api/oauth2/token",
+    getAccessCodeParams(code)
   );
 
-  if (purchasedProductArr.length) {
-    const purchasedProductsToLowerCase = purchasedProductArr.map(
-      (purchasedProductName: string) => purchasedProductName.toLowerCase()
-    );
+  // Get User from Access Code
+  const { data: candidateUser } = await axios(
+    "https://discord.com/api/users/@me",
+    getUserParams(oAuthData.token_type, oAuthData.access_token)
+  );
 
-    await grantAccessToPrivateChannels(discordId, purchasedProductsToLowerCase);
-  }
+  // With users email and discordID, get their registered products from wix
+  const {
+    data: { message }
+  }: AxiosResponse = await axios(
+    getUsersRegisteredProductsConfig(candidateUser.id, candidateUser.email)
+  );
+
+  /* -----> Change the role from New User to Member <----- */
+  await axios(putMemberRoleConfig(candidateUser.id));
+  await axios(deleteNewUserRoleConfig(candidateUser.id));
+
+  const purchasedProductsJoined = message
+    .map((channel: DiscordChannel) => channel.toLowerCase())
+    .join(" ");
+
+  await grantAccessToPrivateChannels(candidateUser.id, purchasedProductsJoined);
+
+  return message.join(", ");
 }
 
 export default enableChannelAccess;

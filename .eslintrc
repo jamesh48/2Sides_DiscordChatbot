@@ -11,7 +11,8 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "operator-linebreak": ["error", "before"],
+    "indent": [2, 2, { "SwitchCase": 1 }],
     "comma-dangle": ["error", "never"],
     "space-before-function-paren": [
       "error",
@@ -26,7 +27,7 @@
     "max-len": [
       "error",
       {
-        "code": 200
+        "code": 250
       }
     ],
     "require-jsdoc": 0,

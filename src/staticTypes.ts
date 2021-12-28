@@ -1,0 +1,11 @@
+export type DiscordId = string;
+export type DiscordChannelsStr = string;
+export type DiscordChannel = string;
+export type UserEmail = string;
+export type RouteCommand = string;
+export type CodeFromDiscord = string;
+export type DiscordRoleId = string;
+export type DiscordAccessToken = string;
+export type DiscordRoleName = string;
+export type DiscordTokenType = string;
+export type AwsAPIKey = string;

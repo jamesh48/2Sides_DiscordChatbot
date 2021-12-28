@@ -1,3 +1,12 @@
+import {
+  AwsAPIKey,
+  CodeFromDiscord,
+  DiscordChannelsStr,
+  DiscordId,
+  RouteCommand,
+  UserEmail
+} from "staticTypes";
+
 /**
  * The available secrets for our Discord server.
  */
@@ -40,20 +49,20 @@ export interface DiscordUser {
  * The incoming request, created via API Gateway request templates.
  */
 export interface DiscordEventRequest {
-  timestamp: string;
-  signature: string;
-  jsonBody: DiscordJsonBody;
+  json: DiscordJson;
   // Custom Added--->
-  email: string;
-  tempRandToken: string;
-  discordId: string;
-  channels: string[];
+  routeCommand: RouteCommand;
+  code: CodeFromDiscord;
+  email: UserEmail;
+  discordId: DiscordId;
+  channels: DiscordChannelsStr;
+  apiKey: AwsAPIKey;
 }
 
 /**
  * The actual Discord request data.
  */
-export interface DiscordJsonBody {
+export interface DiscordJson {
   id?: string;
   token?: string;
   data?: DiscordRequestData;
@@ -69,8 +78,11 @@ export interface DiscordJsonBody {
 export interface DiscordRequestData {
   id: string;
   name: string;
-  kick: string;
+  command: string;
   email: string;
+  apiKey: string;
+  channels: string;
+  discordId: string;
   options?: DiscordRequestDataOption[];
 }
 
@@ -101,3 +113,8 @@ export interface DiscordResponseData {
   allowed_mentions: string[];
   /* eslint-enable camelcase */
 }
+
+export type Channel = {
+  id: string;
+  name: string;
+};

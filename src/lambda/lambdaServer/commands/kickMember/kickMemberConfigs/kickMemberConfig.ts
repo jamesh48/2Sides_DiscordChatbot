@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
-export const kickMemberConfig = (discordID: string) => {
+import { DiscordId } from "staticTypes";
+export const kickMemberConfig = (discordID: DiscordId) => {
   const {
     discordAuthToken,
     discordGuildID

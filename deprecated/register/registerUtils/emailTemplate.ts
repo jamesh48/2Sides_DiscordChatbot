@@ -38,7 +38,6 @@ export const emailTemplate = (
         text-decoration: underline;
       }
       #table-root {
-        display: block;
         background-color: lightblue;
         border: 1px solid black;
         text-align: center;
@@ -51,7 +50,7 @@ export const emailTemplate = (
         right: 0;
         left: 0;
         margin: auto;
-        height: 57.5vh;
+        height: 60vh;
       }
       #purchased-product-display {
         border-bottom: 1px solid black;
@@ -82,7 +81,10 @@ export const emailTemplate = (
       <tr>
         <td class="email-line-item">
           A request was made by user <b>${username}</b> to enable a Discord
-          Guild Access purchase from <b>${wixWebsiteName}</b>.
+          Guild Access purchase from:
+        </td>
+        <td class="email-line-item">
+          <b>${wixWebsiteName}</b>
         </td>
         <td class="email-line-item underline">
           <b

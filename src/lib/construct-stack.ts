@@ -20,38 +20,35 @@ export class DiscordBotStack extends Stack {
     super(scope, id);
 
     // Commands Lambda
-    const discordCommandsLambda = new NodejsFunction(
-      this,
-      "discord-commands-lambda",
-      {
-        runtime: Runtime.NODEJS_14_X,
-        entry: path.join(__dirname, "../lambda/lambdaServer/lambdaServer.ts"),
-        environment: {
-          DISCORD_CREDENTIALS: `${
-            Secret.fromSecretAttributes(this, "discordCredentials", {
-              secretCompleteArn: process.env.DISCORD_CREDENTIALS_ARN
-            }).secretValue
-          }`,
-          WIX_CREDENTIALS: `${
-            Secret.fromSecretAttributes(this, "wixCredentials", {
-              secretCompleteArn: process.env.WIX_CREDENTIALS_ARN
-            }).secretValue
-          }`,
-          SENDGRID_API_KEY: `${
-            Secret.fromSecretAttributes(this, "sendgrid-api-key", {
-              secretCompleteArn: process.env.SENDGRID_API_KEY_ARN
-            }).secretValue
-          }`,
-          SECRET_URLS: `${
-            Secret.fromSecretAttributes(this, "SecretURLs", {
-              secretCompleteArn: process.env.SECRET_URLS_ARN
-            }).secretValue
-          }`
-        },
-        handler: "handler",
-        timeout: Duration.seconds(20)
+    const discordCommandsLambda = new NodejsFunction(this, "discord-commands-lambda", {
+      handler: "handler",
+      memorySize: 2048,
+      timeout: Duration.seconds(20),
+      runtime: Runtime.NODEJS_14_X,
+      entry: path.join(__dirname, "../lambda/lambdaServer/lambdaServer.ts"),
+      environment: {
+        DISCORD_CREDENTIALS: `${
+          Secret.fromSecretAttributes(this, "discordCredentials", {
+            secretCompleteArn: process.env.DISCORD_CREDENTIALS_ARN
+          }).secretValue
+        }`,
+        WIX_CREDENTIALS: `${
+          Secret.fromSecretAttributes(this, "wixCredentials", {
+            secretCompleteArn: process.env.WIX_CREDENTIALS_ARN
+          }).secretValue
+        }`,
+        SENDGRID_API_KEY: `${
+          Secret.fromSecretAttributes(this, "sendgrid-api-key", {
+            secretCompleteArn: process.env.SENDGRID_API_KEY_ARN
+          }).secretValue
+        }`,
+        SECRET_URLS: `${
+          Secret.fromSecretAttributes(this, "SecretURLs", {
+            secretCompleteArn: process.env.SECRET_URLS_ARN
+          }).secretValue
+        }`
       }
-    );
+    });
 
     new DiscordBotConstruct(this, "discord-bot-endpoint", {
       commandsLambdaFunction: discordCommandsLambda

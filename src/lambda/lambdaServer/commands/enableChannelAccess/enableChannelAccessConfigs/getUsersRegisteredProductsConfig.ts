@@ -1,19 +1,20 @@
 import { AxiosRequestConfig } from "axios";
+import { DiscordId, UserEmail } from "staticTypes";
 
 export const getUsersRegisteredProductsConfig = (
-  userEmail: string,
-  discordId: string,
-  tempRandToken: string
+  candidateUserID: DiscordId,
+  candidateUserEmail: UserEmail
 ) => {
-  // @ts-ignore, only undefined in local env
-  const { wixAPIKey, wixWebsiteName } = JSON.parse(process.env.WIX_CREDENTIALS);
+  // @ts-ignore
+  const { wixWebsiteName, wixAPIKey } = JSON.parse(process.env.WIX_CREDENTIALS);
 
   const getUsersRegisteredProductsConfig: AxiosRequestConfig = {
-    url: `${wixWebsiteName}/_functions/usersRegisteredProducts?email=${userEmail}&discordId=${discordId}&tempRandToken=${tempRandToken}`,
+    method: "GET",
+    url: `${wixWebsiteName}/_functions/usersRegisteredProducts`,
+    params: { discordId: candidateUserID, email: candidateUserEmail },
     headers: {
       Authorization: wixAPIKey
     }
   };
-
   return getUsersRegisteredProductsConfig;
 };

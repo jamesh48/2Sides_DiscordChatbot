@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
+import { DiscordId } from "staticTypes";
 
-export const putMemberRoleConfig = (discordId: string) => {
+export const putMemberRoleConfig = (discordId: DiscordId) => {
   const {
     discordAuthToken,
     discordGuildID,

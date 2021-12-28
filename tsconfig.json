@@ -4,6 +4,7 @@
     "module": "commonjs",
     "lib": ["es2018"],
     "baseUrl": "./src",
+    "jsx": "react",
     "paths": {
       "Types": ["types"],
       "DiscordSecrets": ["functions/utils/DiscordSecrets"],
@@ -30,6 +31,12 @@
     "typeRoots": ["./node_modules/@types"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/types.ts"],
-  "exclude": ["cdk.out", "outputs.json"]
+  "include": ["src/**/*.ts", "src/types.ts", "src/functions/App.tsx"],
+  "exclude": [
+    "tsconfig.json",
+    "cdk.out",
+    "outputs.json",
+    "node_modules",
+    "deprecated/**/*.ts"
+  ]
 }

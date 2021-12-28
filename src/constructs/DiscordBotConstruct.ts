@@ -9,6 +9,7 @@ import {
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { Construct, Duration } from "@aws-cdk/core";
 import { Secret } from "@aws-cdk/aws-secretsmanager";
+import { makeHtmlErr } from "../functions/makeHtmlErr";
 
 /**
  * The properties required for the Discord Bot construct. Specifically
@@ -46,16 +47,22 @@ export class DiscordBotConstruct extends Construct {
     const discordBotLambda = new NodejsFunction(this, "discord-bot-lambda", {
       runtime: Runtime.NODEJS_14_X,
       entry: path.join(__dirname, "../functions/DiscordBotFunction.ts"),
+      handler: "handler",
+      timeout: Duration.seconds(20),
+      memorySize: 2048,
       environment: {
         DISCORD_CREDENTIALS: `${
           Secret.fromSecretAttributes(this, "discordCredentials", {
             secretCompleteArn: process.env.DISCORD_CREDENTIALS_ARN
           }).secretValue
         }`,
+        WIX_CREDENTIALS: `${
+          Secret.fromSecretAttributes(this, "wixCredentials", {
+            secretCompleteArn: process.env.WIX_CREDENTIALS_ARN
+          }).secretValue
+        }`,
         COMMAND_LAMBDA_ARN: props.commandsLambdaFunction.functionArn
-      },
-      handler: "handler",
-      timeout: Duration.seconds(3)
+      }
     });
 
     props.commandsLambdaFunction.addEnvironment(
@@ -73,6 +80,7 @@ export class DiscordBotConstruct extends Construct {
         allowOrigins: Cors.ALL_ORIGINS
       }
     });
+
     const discordBotAPIValidator = new RequestValidator(
       this,
       "discord-bot-api-validator",
@@ -90,7 +98,8 @@ export class DiscordBotConstruct extends Construct {
       }
     });
 
-    // Transform our requests and responses as appropriate.
+    // Automations from WIX Send POST requests- assignBadge, kickMember
+    // Also when a new product is purchased (from event handler)
     const discordBotPOSTIntegration: LambdaIntegration = new LambdaIntegration(
       discordBotLambda,
       {
@@ -98,10 +107,10 @@ export class DiscordBotConstruct extends Construct {
         requestTemplates: {
           "application/json":
             '{\r\n\
-              "timestamp": "$input.params(\'x-signature-timestamp\')",\r\n\
-              "signature": "$input.params(\'x-signature-ed25519\')",\r\n\
-              "kick": "$input.params(\'kick\')",\r\n\
-              "jsonBody" : $input.json(\'$\')\r\n\
+              "channels": "$input.params(\'channels\')",\r\n\
+              "discordId": "$input.params(\'discordId\')",\r\n\
+              "apiKey": "$input.params(\'apiKey\')",\r\n\
+              "json" : $input.json(\'$\')\r\n\
             }'
         },
         integrationResponses: [
@@ -126,25 +135,31 @@ export class DiscordBotConstruct extends Construct {
         requestTemplates: {
           "application/json":
             '{\r\n\
-              "discordId": "$input.params(\'discordId\')",\r\n\
-              "tempRandToken": "$input.params(\'tempRandToken\')",\r\n\
-              "channels": "$input.params(\'channels\')",\r\n\
-              "email": "$input.params(\'email\')"\r\n\
+              "code": "$input.params(\'code\')"\r\n\
             }'
         },
         integrationResponses: [
           {
             statusCode: "302",
             responseParameters: {
-              "method.response.header.Location":
-                "integration.response.body.location"
+              "method.response.header.Location": "integration.response.body.location",
+              "method.response.header.Content-Type": "'text/html'"
+            },
+            responseTemplates: {
+              "text/html": "$input.path('$')"
             }
           },
           {
             statusCode: "401",
             selectionPattern: ".*[UNAUTHORIZED].*",
+            responseParameters: {
+              "method.response.header.Content-Type": "'text/html'"
+            },
             responseTemplates: {
-              "application/json": "invalid request signature"
+              "text/html": makeHtmlErr(
+                // eslint-disable-next-line max-len
+                ".It is highly unlikely that you should see this error message. \\n If you do, it is because the request timed out after 20 seconds \\n It is possible that you were still registered for the Guild however. \\n If you still do not have access, please contact Danny.."
+              )
             }
           }
         ]
@@ -157,11 +172,15 @@ export class DiscordBotConstruct extends Construct {
         {
           statusCode: "302",
           responseParameters: {
-            "method.response.header.Location": true
+            "method.response.header.Location": true,
+            "method.response.header.Content-Type": true
           }
         },
         {
-          statusCode: "401"
+          statusCode: "401",
+          responseParameters: {
+            "method.response.header.Content-Type": true
+          }
         }
       ]
     });
@@ -178,6 +197,14 @@ export class DiscordBotConstruct extends Construct {
           statusCode: "401"
         }
       ]
+    });
+
+    discordBotAPI.addUsagePlan("UsagePlan", {
+      name: "discord-bot-api-usage-plan",
+      throttle: {
+        rateLimit: 100,
+        burstLimit: 20
+      }
     });
   }
 }
