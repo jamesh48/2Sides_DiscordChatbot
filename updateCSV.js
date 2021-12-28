@@ -4,8 +4,8 @@ const fs = require("fs").promises;
   const readCSVFile = await fs.readFile("./testSheet.csv", "UTF-8");
   const split = readCSVFile.split("\n");
   const reduced = split.reduce((total, line) => {
-    let [itemName, buyerName, purchaseEmail, purchaseTime, city, country] =
-      line.split(",");
+    let [itemName, buyerName, purchaseEmail, purchaseTime, city, country]
+    = line.split(",");
 
     if (itemName === "The DT Vanish (FREE)" || itemName === "Lecture") {
       return total;
@@ -29,11 +29,7 @@ const fs = require("fs").promises;
       city = "Not Provided";
     }
 
-    total.push(
-      [itemName, buyerName, purchaseEmail, city, country].join(
-        ","
-      )
-    );
+    total.push([itemName, buyerName, purchaseEmail, city, country].join(","));
     return total;
   }, []);
   await fs.writeFile("./outputSheet.csv", reduced.join("\n"));
