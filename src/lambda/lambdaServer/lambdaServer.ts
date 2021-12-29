@@ -4,10 +4,12 @@ import {
   enableChannelAccess,
   enableNewChannelAccess,
   kickMember,
-  assignBadge
+  assignBadge,
+  redeem
 } from "./commands/commandIndex";
 
 import { DiscordEventRequest } from "Types";
+import { verifyUser } from "./commands/verifyUser/verifyUser";
 
 exports.handler = async (
   event: DiscordEventRequest,
@@ -23,11 +25,8 @@ exports.handler = async (
     try {
       const channelsGranted = await enableChannelAccess(event.code);
       return channelsGranted;
-    } catch (err) {
-      // @ts-ignore
-      console.log(err.response.status + ": " + err.response.data.error);
-      // @ts-ignore
-      return err.response.status + ": " + err.response.data.error;
+    } catch (err: any) {
+      return err.message.split("||");
     }
   }
 
@@ -47,6 +46,35 @@ exports.handler = async (
   if (event.routeCommand === "kick" && event.json.data) {
     await kickMember(event.json.data.email.trim());
     return "200";
+  }
+
+  // POST request from error page, sends email with verification link.
+  if (event.routeCommand === "redeem" && event.json.data) {
+    try {
+      await redeem(event.json.data.email, event.json.data.discordId);
+      return "200";
+    } catch (err: any) {
+      return err.message;
+    }
+  }
+
+  // GET request from email verification link. Should accomplish the same as enableNewChannels.
+  // A verification error would occur because:
+  // the wix api key isn't provided. (Invalid Credentials)
+  // the random token doesn't match ()
+  // The redeemer function posts a random token on a user who has purchased a discord subscription.
+  // There are no new products to register ?
+  if (event.routeCommand === "verification") {
+    try {
+      const channelsGranted = await verifyUser(
+        event.discordId,
+        event.tempRandToken,
+        event.email
+      );
+      return channelsGranted;
+    } catch (err: any) {
+      return err.message.split("||");
+    }
   }
 
   return "200";

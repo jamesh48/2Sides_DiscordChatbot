@@ -135,7 +135,10 @@ export class DiscordBotConstruct extends Construct {
         requestTemplates: {
           "application/json":
             '{\r\n\
-              "code": "$input.params(\'code\')"\r\n\
+              "code": "$input.params(\'code\')",\r\n\
+              "discordId": "$input.params(\'discordId\')",\r\n\
+              "email": "$input.params(\'email\')",\r\n\
+              "tempRandToken": "$input.params(\'tempRandToken\')"\r\n\
             }'
         },
         integrationResponses: [
@@ -158,7 +161,8 @@ export class DiscordBotConstruct extends Construct {
             responseTemplates: {
               "text/html": makeHtmlErr(
                 // eslint-disable-next-line max-len
-                ".It is highly unlikely that you should see this error message. \\n If you do, it is because the request timed out after 20 seconds \\n It is possible that you were still registered for the Guild however. \\n If you still do not have access, please contact Danny.."
+                ".It is unlikely that you should see this error message. \\n If you do, it is because of an internal server error \\n It is possible that you were still registered for the Guild however. \\n If you still do not have access, please contact Danny..",
+                ""
               )
             }
           }

@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import { Lambda } from "aws-sdk";
 import { Context, Callback } from "aws-lambda";
 import { DiscordEventRequest, DiscordEventResponse } from "Types";
@@ -5,7 +6,7 @@ import { commandLambdaARN } from "./constants/EnvironmentProps";
 import { RouteCommand } from "staticTypes";
 import { makeHtmlErr } from "./makeHtmlErr";
 import { makeHtmlSuccess } from "./makeHtmlSuccess";
-import { makeRegistrationPortal } from "./makeRegistrationPortal";
+// import { makeRegistrationPortal } from "./makeRegistrationPortal";
 
 const lambda = new Lambda();
 
@@ -26,23 +27,25 @@ export async function handler(
 
   if (event.code) {
     routeCommand = "accessCode";
-    // @ts-ignore
-    return makeRegistrationPortal();
   } else if (event.json?.data?.channels && event.json?.data?.discordId) {
     routeCommand = "enableNewChannels";
   } else if (event.json?.data?.command === "kick") {
     routeCommand = "kick";
   } else if (event.json?.data?.command === "badge") {
     routeCommand = "badge";
+  } else if (event.json?.data?.email && event.json?.data?.discordId) {
+    routeCommand = "redeem";
+  } else if (event.tempRandToken && event.email && event.discordId) {
+    routeCommand = "verification";
   }
 
   const { apiKey } = JSON.parse(process.env.WIX_CREDENTIALS || "");
 
   if (
-    (routeCommand === "enableNewChannels"
-    || routeCommand === "kick"
-    || routeCommand === "badge")
-    && event.json?.data?.apiKey !== apiKey
+    (routeCommand === "enableNewChannels" ||
+      routeCommand === "kick" ||
+      routeCommand === "badge") &&
+    event.json?.data?.apiKey !== apiKey
   ) {
     // @ts-ignore
     return "<div>Invalid API Key</div>";
@@ -59,10 +62,33 @@ export async function handler(
   const { Payload } = await lambdaPromise;
 
   console.log("this is the result of the command lambda");
-  console.log(Payload?.toString());
-  if (routeCommand === "accessCode" && Payload) {
-    if (Payload.toString().indexOf("400") > -1) {
-      const html = makeHtmlErr(Payload.toString());
+  console.log(Payload);
+
+  if (routeCommand === "redeem" && Payload && event.json.data) {
+    if (Payload.toString().indexOf("404") !== -1) {
+      // @ts-ignore
+      return (
+        "The Email " +
+        event.json.data.email +
+        " was not found, are you sure you entered it correctly?"
+      );
+    } else if (Payload.toString().indexOf("400") > -1) {
+      // @ts-ignore
+      return "The email " + event.json.data.email + " is already registered";
+    } else if (Payload.toString().indexOf("200") !== -1) {
+      // @ts-ignore
+      return (
+        "An email has been sent to " +
+        event.json.data.email +
+        " to verify your Guild Subscription"
+      );
+    }
+  }
+
+  if ((routeCommand === "accessCode" || routeCommand === "verification") && Payload) {
+    if (Array.isArray(JSON.parse(Payload.toString()))) {
+      const [errMessage, discordId] = JSON.parse(Payload.toString());
+      const html = makeHtmlErr(JSON.stringify(errMessage), JSON.stringify(discordId));
       // @ts-ignore
       return html;
     } else {

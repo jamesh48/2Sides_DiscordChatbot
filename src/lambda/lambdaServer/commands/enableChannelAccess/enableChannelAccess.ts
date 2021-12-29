@@ -25,11 +25,17 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
   );
 
   // With users email and discordID, get their registered products from wix
-  const {
-    data: { message }
-  }: AxiosResponse = await axios(
-    getUsersRegisteredProductsConfig(candidateUser.id, candidateUser.email)
-  );
+
+  try {
+    // eslint-disable-next-line no-var
+    var {
+      data: { message }
+    }: AxiosResponse = await axios(
+      getUsersRegisteredProductsConfig(candidateUser.id, candidateUser.email)
+    );
+  } catch (err: any) {
+    throw new Error(err.response.status + ": " + err.response.data.error + "||" + candidateUser.id);
+  }
 
   /* -----> Change the role from New User to Member <----- */
   await axios(putMemberRoleConfig(candidateUser.id));

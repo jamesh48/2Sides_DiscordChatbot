@@ -57,6 +57,7 @@ export interface DiscordEventRequest {
   discordId: DiscordId;
   channels: DiscordChannelsStr;
   apiKey: AwsAPIKey;
+  tempRandToken: string;
 }
 
 /**
