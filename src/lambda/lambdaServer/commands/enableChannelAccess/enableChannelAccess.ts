@@ -34,7 +34,9 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
       getUsersRegisteredProductsConfig(candidateUser.id, candidateUser.email)
     );
   } catch (err: any) {
-    throw new Error(err.response.status + ": " + err.response.data.error + "||" + candidateUser.id);
+    throw new Error(
+      err.response.status + ": " + err.response.data.error + "||" + candidateUser.id
+    );
   }
 
   /* -----> Change the role from New User to Member <----- */
@@ -47,7 +49,7 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
 
   await grantAccessToPrivateChannels(candidateUser.id, purchasedProductsJoined);
 
-  return message.join(", ");
+  return [message.join(", "), candidateUser.id];
 }
 
 export default enableChannelAccess;

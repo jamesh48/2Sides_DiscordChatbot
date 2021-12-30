@@ -1,8 +1,16 @@
-export const makeHtmlSuccess = (channelsGranted: string) => `
+/* eslint-disable operator-linebreak */
+export const makeHtmlSuccess = (channelsGranted: string, discordId: string) => {
+  return (
+    /* html */
+    `
   <!DOCTYPE html>
   <html>
     <head>
       <title>Registration Success</title>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
       <style>
         html {
           background: rgb(253,187,45);
@@ -70,43 +78,120 @@ export const makeHtmlSuccess = (channelsGranted: string) => `
           font-size: 1.5vmax;
         }
 
+        #form-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 1% 0;
+        }
+
+        #inputs-container {
+          display: flex;
+        }
+
+        .input-form-text {
+          background-color: darkcyan;
+          text-align: center;
+          flex: 1;
+        }
+
+        .input-form-text:focus {
+          background-color: green;
+        }
+        .input-form-submit {
+          background-color: darkslategray;
+        }
+
+        .input-form-submit {
+          background-color: green;
+        }
+
+        .input-form-input:disabled {
+          background-color: gray;
+        }
+
       </style>
     </head>
 
     <body>
-      <div id='success-container'>
-        <h4 class='access-announcement'>Welcome to the Guild!</h4>
-        <h5 class='access-granted'>Your access has been granted.</h5>
-        ${
-  channelsGranted.length
-  // eslint-disable-next-line max-len
-  && `<div class='exclusive-access-container'><h5>You have also been granted access to the exclusive channels associated with these purchases:</h5><h4 id='channels-granted'>${channelsGranted}</h4><h5>If you buy additional products you will automatically be added to their exclusive channels as well!</h5></div>` || ""
-}
-        <h6 id='self-destruct-message'>Closing in... 59 seconds</h6>
-      </div>
+    <div id='root'></div>
+        <script type='text/babel'>
 
-    </body>
-    <script>
-    function startTimer(duration, display) {
-      var timer = duration, seconds;
-      setInterval(function () {
-          seconds = parseInt(timer % 60, 10);
+        const channelsGranted = ${channelsGranted};
+        const discordId = ${discordId};
 
-          seconds = seconds < 10 ? "0" + seconds : seconds;
+        const InputForm = () => {
+          const [emailVal, setEmailVal] = React.useState('');
+          const [submitting, setSubmitting] = React.useState(false);
 
-          display.textContent = "This message will close itself in... " + 00 + ":" + seconds;
+          React.useEffect(() => {
+            if (submitting === true) {
+              setEmailVal('');
+            }
+          }, [submitting]);
 
-          if (--timer < 0) {
-              window.close();
+          const handleChange = () => {
+            setEmailVal(event.target.value)
+          };
+
+          const handleSubmit = () => {
+            setSubmitting(true);
+            event.preventDefault();
+            axios({
+              method: "POST",
+              url: "https://2ixnlpbqmi.execute-api.us-east-1.amazonaws.com/prod/event",
+              data: {
+                data: {
+                  email: emailVal,
+                  discordId: discordId,
+                  command: 'registerAdditionalEmail'
+                }
+              }
+            }).then((response) => {
+              console.log(response.data)
+            }).finally(() => {
+              setSubmitting(false);
+            })
           }
-      }, 1000);
-  }
 
-  window.onload = function () {
-    var sixtySeconds = 59;
-    var display = document.querySelector('#self-destruct-message');
-    startTimer(sixtySeconds, display);
-};
-    </script>
+          return (
+            <div id='form-container'>
+              <div id='input-form-msg'>
+                <h4>If you have bought dannygoldsmithmagic products with another email, you can associate it here:</h4>
+              </div>
+              <form id='input-form' onSubmit={handleSubmit}>
+                <div id='inputs-container'>
+                  <input className='input-form-input' id='input-form-text' type='text' onChange={handleChange} value={emailVal} disabled={!!submitting}></input>
+                  <input className='input-form-input' id='input-form-submit' type='submit' disabled={!!submitting}></input>
+                </div>
+              </form>
+            </div>
+          )
+        }
+
+        const App = (props) => {
+          return (
+            <div id='success-container'>
+              <h4 class='access-announcement'>Welcome to the Guild!</h4>
+              <h5 class='access-granted'>Your access has been granted.</h5>
+              {(props.channelsGranted.length &&
+                  // eslint-disable-next-line max-len
+                  <div class='exclusive-access-container'>
+                    <h5>You have also been granted access to the exclusive channels associated with these purchases:</h5>
+                    <h4 id='channels-granted'>{props.channelsGranted}</h4>
+                  </div>) || ""}
+                  <InputForm/>
+            </div>
+
+          )
+        }
+
+
+
+      ReactDOM.render(<App channelsGranted={channelsGranted}/>, document.getElementById("root"));
+      </script>
+    </body>
   </html>
-`;
+`
+  );
+};

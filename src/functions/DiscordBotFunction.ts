@@ -15,7 +15,7 @@ const lambda = new Lambda();
  * @param {DiscordEventRequest} event The incoming request to handle.
  * @param {Context} _context The context this request was called with.
  * @param {Callback} _callback A callback to handle the request.
- * @return {DiscordEventResponse} Returns a response to send back to Discord.
+ * @return {DiscordEventResponse} Returns a primitive string or html markup string;
  */
 export async function handler(
   event: DiscordEventRequest,
@@ -33,12 +33,15 @@ export async function handler(
     routeCommand = "kick";
   } else if (event.json?.data?.command === "badge") {
     routeCommand = "badge";
-  } else if (event.json?.data?.email && event.json?.data?.discordId) {
+  } else if (event.json?.data?.command === "redeem") {
     routeCommand = "redeem";
   } else if (event.tempRandToken && event.email && event.discordId) {
     routeCommand = "verification";
+  } else if (event.json?.data?.command === "registerAdditionalEmail") {
+    routeCommand = "registerAdditionalEmail";
   }
 
+  // The apiKey is necessary to secure any routes that WIX initiates.
   const { apiKey } = JSON.parse(process.env.WIX_CREDENTIALS || "");
 
   if (
@@ -47,7 +50,6 @@ export async function handler(
       routeCommand === "badge") &&
     event.json?.data?.apiKey !== apiKey
   ) {
-    // @ts-ignore
     return "<div>Invalid API Key</div>";
   }
 
@@ -66,17 +68,14 @@ export async function handler(
 
   if (routeCommand === "redeem" && Payload && event.json.data) {
     if (Payload.toString().indexOf("404") !== -1) {
-      // @ts-ignore
       return (
         "The Email " +
         event.json.data.email +
         " was not found, are you sure you entered it correctly?"
       );
-    } else if (Payload.toString().indexOf("400") > -1) {
-      // @ts-ignore
+    } else if (Payload.toString().indexOf("400") !== -1) {
       return "The email " + event.json.data.email + " is already registered";
     } else if (Payload.toString().indexOf("200") !== -1) {
-      // @ts-ignore
       return (
         "An email has been sent to " +
         event.json.data.email +
@@ -86,26 +85,32 @@ export async function handler(
   }
 
   if ((routeCommand === "accessCode" || routeCommand === "verification") && Payload) {
-    if (Array.isArray(JSON.parse(Payload.toString()))) {
+    if (JSON.parse(Payload.toString())[0]) {
+      console.log("HERE!");
+      console.log(Payload.toString());
       const [errMessage, discordId] = JSON.parse(Payload.toString());
-      const html = makeHtmlErr(JSON.stringify(errMessage), JSON.stringify(discordId));
-      // @ts-ignore
-      return html;
-    } else {
-      const html = makeHtmlSuccess(
-        Payload.toString()
-          .slice(1, -1)
-          .replace("The Guild Patron,", "")
-          .replace("The Guild,", "")
-          .replace("The Guild Patron", "")
-          .replace("The Guild", "")
+      const htmlErrPage = makeHtmlErr(
+        JSON.stringify(errMessage),
+        JSON.stringify(discordId)
       );
-      // @ts-ignore
-      return html;
+      return htmlErrPage;
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      const [_, channelsToJoin, discordId] = JSON.parse(Payload.toString());
+
+      const htmlSuccessPage = makeHtmlSuccess(
+        JSON.stringify(
+          channelsToJoin
+            .replace("The Guild Patron,", "")
+            .replace("The Guild,", "")
+            .replace("The Guild Patron", "")
+            .replace("The Guild", "")
+        ),
+        JSON.stringify(discordId)
+      );
+      return htmlSuccessPage;
     }
   } else {
-    return {
-      type: 9
-    };
+    return "success";
   }
 }

@@ -89,5 +89,5 @@ export const makeRegistrationPortal = () => {
         </script>
     </body>
   </html>
-`;
+`
 };

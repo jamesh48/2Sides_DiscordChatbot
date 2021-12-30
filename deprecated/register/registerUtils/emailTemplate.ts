@@ -110,7 +110,7 @@ export const emailTemplate = (
           </a>
         </td>
         <td class="email-line-item">Welcome To The Guild,</td>
-        <td class='email-line-item'>-2Sides</td>
+        <td class='email-line-item'>-Magic Wand</td>
       </tr>
     </table>
   </body>

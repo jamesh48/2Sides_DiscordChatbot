@@ -95,12 +95,26 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
         background-color: green;
       }
 
+      #redeemer-input-text:disabled {
+        background-color: gray;
+      }
+
       #redeemer-input-submit {
         background-color: darkslategray;
       }
 
       #redeemer-input-submit:hover {
         background-color: green;
+      }
+
+      #redeemer-input-submit:disabled {
+        background-color: gray;
+      }
+
+      #success-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
     </style>
@@ -117,16 +131,49 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
         const [emailVal, setEmailVal] = React.useState("");
         const [validationContainerMsg, setValidationContainerMsg] = React.useState([null, ""]);
         const [submitting, setSubmitting] = React.useState(false);
+        const [countDownTimer, setCountDownTimer] = React.useState(30);
 
         const handleChange = () => {
           setEmailVal(event.target.value);
         };
 
+
+        React.useEffect(() => {
+          if (validationContainerMsg[0] === 'error' || validationContainerMsg[0] === null) {
+            setSubmitting(false);
+          }
+        }, [validationContainerMsg]);
+
+        React.useEffect(() => {
+          if (submitting === true) {
+            setEmailVal("");
+          }
+        }, [submitting])
+
+
+        React.useEffect(() => {
+          if (countDownTimer === 0) {
+            window.close();
+          }
+        }, [countDownTimer]);
+
+        const startSelfDestructSequence = () => {
+          setInterval(() => {
+              console.log('interval set...', countDownTimer);
+              setCountDownTimer(ex => ex - 1);
+            }, 1000);
+        };
+
+        React.useEffect(() => {
+          if (validationContainerMsg[0] === "success") {
+            startSelfDestructSequence()
+          }
+        }, [validationContainerMsg]);
+
         const handleSubmit = () => {
           event.preventDefault();
+          const memoedEmailVal = emailVal;
             setSubmitting(true);
-            const memoedEmailVal = emailVal;
-            setEmailVal("");
 
             axios({
               method: 'POST',
@@ -134,7 +181,8 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
               data: {
                 data: {
                   discordId: props.discordId,
-                  email: memoedEmailVal
+                  email: memoedEmailVal,
+                  command: 'redeem'
                 }
               }
             }).then((response) => {
@@ -143,16 +191,17 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
                 } else {
                   setValidationContainerMsg(["success", response.data])
                 }
-              }).finally(() => {
-                setSubmitting(false);
-              })
+              });
         };
 
         return (
           <form onSubmit={handleSubmit} id='error-redeemer-form'>
             {validationContainerMsg[0] === 'error' && <div id='validation-container'>{validationContainerMsg[1]}</div>}
             {validationContainerMsg[0] === 'success' ?
-            <div id='validation-container'>{validationContainerMsg[1]}</div> :
+            <div id='success-container'>
+              <div id='validation-container'>{validationContainerMsg[1]}</div>
+              <p>Window will close in {countDownTimer} seconds</p>
+            </div> :
               (<div id='redeemer-form-inputs'>
                 <input className='redeemer-input' id='redeemer-input-text' type='text' value={emailVal} onChange={handleChange} disabled={!!submitting}></input>
                 <input className='redeemer-input' id='redeemer-input-submit' type='submit' disabled={!!submitting}></input>
@@ -169,7 +218,7 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
             <div id='error-message-container'>
             {props.errMessage
                 .split("\\n")
-                .map((x) => <p className='error-detail'>{x}</p>)
+                .map((x, i) => <p key={i} className='error-detail'>{x}</p>)
             }
             </div>
             {/* If Verification Fails do not show the input */}
