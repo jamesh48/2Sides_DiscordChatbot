@@ -8,7 +8,8 @@ export const registerAdditionalEmail = async (email: UserEmail, discordId: Disco
     // eslint-disable-next-line no-var
     var { data } = await axios(postAdditionalEmailConfig(email, discordId));
   } catch (err: any) {
-    throw new Error(err.response.status + ": " + err.response.data.error);
+    // Only the message needs to be sent back to the client.
+    throw new Error(err.response.data.error);
   }
 
   // Send Email with random token in hyperlink.

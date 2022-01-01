@@ -31,14 +31,28 @@ export const verifyUser = async (
     );
   }
 
-  await axios(putMemberRoleConfig(discordId));
-  await axios(deleteNewUserRoleConfig(discordId));
-
+  // Todo: run get request to check if role exists already.
+  if (data.message.join(", ").indexOf("The Guild") > -1) {
+    await axios(putMemberRoleConfig(discordId));
+    await axios(deleteNewUserRoleConfig(discordId));
+  }
+  console.log("permissions successfully changed");
+  console.log(data.message);
+  console.log(typeof data.message);
+  console.log(Array.isArray(data.message));
   const purchasedProductsJoined = data.message
     .map((channel: DiscordChannel) => channel.toLowerCase())
     .join(" ");
-
-  await grantAccessToPrivateChannels(discordId, purchasedProductsJoined);
+  console.log(purchasedProductsJoined);
+  console.log(typeof purchasedProductsJoined);
+  console.log("granting access to private channels");
+  try {
+    await grantAccessToPrivateChannels(discordId, purchasedProductsJoined);
+  } catch (err: any) {
+    console.log(err.message);
+    throw new Error(err.message);
+  }
+  console.log("access granted to private channels successfully");
 
   return data.message.join(", ");
 };

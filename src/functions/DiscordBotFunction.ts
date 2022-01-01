@@ -6,7 +6,6 @@ import { commandLambdaARN } from "./constants/EnvironmentProps";
 import { RouteCommand } from "staticTypes";
 import { makeHtmlErr } from "./makeHtmlErr";
 import { makeHtmlSuccess } from "./makeHtmlSuccess";
-// import { makeRegistrationPortal } from "./makeRegistrationPortal";
 
 const lambda = new Lambda();
 
@@ -89,9 +88,10 @@ export async function handler(
       console.log("HERE!");
       console.log(Payload.toString());
       const [errMessage, discordId] = JSON.parse(Payload.toString());
+      console.log(discordId);
       const htmlErrPage = makeHtmlErr(
-        JSON.stringify(errMessage),
-        JSON.stringify(discordId)
+        JSON.stringify(errMessage)
+        // ,  JSON.stringify(discordId)
       );
       return htmlErrPage;
     } else {
@@ -106,7 +106,8 @@ export async function handler(
             .replace("The Guild Patron", "")
             .replace("The Guild", "")
         ),
-        JSON.stringify(discordId)
+        JSON.stringify(discordId),
+        ""
       );
       return htmlSuccessPage;
     }

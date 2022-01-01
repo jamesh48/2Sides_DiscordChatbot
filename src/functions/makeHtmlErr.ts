@@ -1,4 +1,4 @@
-export const makeHtmlErr = (errMessage: string, discordId: string) => {
+export const makeHtmlErr = (errMessage: string) => {
   return (
     /* html */
     `<!DOCTYPE html>
@@ -125,91 +125,6 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
 
     <script type='text/babel'>
       const errMessage = ${errMessage};
-      const discordId = ${discordId};
-
-      const InputForm = (props) => {
-        const [emailVal, setEmailVal] = React.useState("");
-        const [validationContainerMsg, setValidationContainerMsg] = React.useState([null, ""]);
-        const [submitting, setSubmitting] = React.useState(false);
-        const [countDownTimer, setCountDownTimer] = React.useState(30);
-
-        const handleChange = () => {
-          setEmailVal(event.target.value);
-        };
-
-
-        React.useEffect(() => {
-          if (validationContainerMsg[0] === 'error' || validationContainerMsg[0] === null) {
-            setSubmitting(false);
-          }
-        }, [validationContainerMsg]);
-
-        React.useEffect(() => {
-          if (submitting === true) {
-            setEmailVal("");
-          }
-        }, [submitting])
-
-
-        React.useEffect(() => {
-          if (countDownTimer === 0) {
-            window.close();
-          }
-        }, [countDownTimer]);
-
-        const startSelfDestructSequence = () => {
-          setInterval(() => {
-              console.log('interval set...', countDownTimer);
-              setCountDownTimer(ex => ex - 1);
-            }, 1000);
-        };
-
-        React.useEffect(() => {
-          if (validationContainerMsg[0] === "success") {
-            startSelfDestructSequence()
-          }
-        }, [validationContainerMsg]);
-
-        const handleSubmit = () => {
-          event.preventDefault();
-          const memoedEmailVal = emailVal;
-            setSubmitting(true);
-
-            axios({
-              method: 'POST',
-              url: 'https://2ixnlpbqmi.execute-api.us-east-1.amazonaws.com/prod/event',
-              data: {
-                data: {
-                  discordId: props.discordId,
-                  email: memoedEmailVal,
-                  command: 'redeem'
-                }
-              }
-            }).then((response) => {
-                if (response.data.indexOf("not found") > -1 || response.data.indexOf("already registered") > -1) {
-                  setValidationContainerMsg(["error", response.data]);
-                } else {
-                  setValidationContainerMsg(["success", response.data])
-                }
-              });
-        };
-
-        return (
-          <form onSubmit={handleSubmit} id='error-redeemer-form'>
-            {validationContainerMsg[0] === 'error' && <div id='validation-container'>{validationContainerMsg[1]}</div>}
-            {validationContainerMsg[0] === 'success' ?
-            <div id='success-container'>
-              <div id='validation-container'>{validationContainerMsg[1]}</div>
-              <p>Window will close in {countDownTimer} seconds</p>
-            </div> :
-              (<div id='redeemer-form-inputs'>
-                <input className='redeemer-input' id='redeemer-input-text' type='text' value={emailVal} onChange={handleChange} disabled={!!submitting}></input>
-                <input className='redeemer-input' id='redeemer-input-submit' type='submit' disabled={!!submitting}></input>
-              </div>)
-             }
-          </form>
-        )
-      }
 
       const App = (props) => {
         return (
@@ -221,13 +136,11 @@ export const makeHtmlErr = (errMessage: string, discordId: string) => {
                 .map((x, i) => <p key={i} className='error-detail'>{x}</p>)
             }
             </div>
-            {/* If Verification Fails do not show the input */}
-            {props.errMessage.indexOf('404: Verification failed:') === -1 && <InputForm discordId={props.discordId}/>}
         </div>
           )
       }
 
-      ReactDOM.render(<App errMessage={errMessage} discordId={discordId}/>, document.getElementById("root"));
+      ReactDOM.render(<App errMessage={errMessage}/>, document.getElementById("root"));
 
       </script>
     </div>

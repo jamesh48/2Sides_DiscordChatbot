@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import axios, { AxiosResponse } from "axios";
 import { grantAccessToPrivateChannels } from "./enableChannelAccessUtils/grantAccessUtilsIndex";
 
@@ -49,7 +50,8 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
 
   await grantAccessToPrivateChannels(candidateUser.id, purchasedProductsJoined);
 
-  return [message.join(", "), candidateUser.id];
+  console.log("enableNewChannels discordId", candidateUser.id);
+  return [message.join(", "), candidateUser.id, candidateUser.email];
 }
 
 export default enableChannelAccess;

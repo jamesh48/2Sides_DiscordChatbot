@@ -31,7 +31,7 @@
     "typeRoots": ["./node_modules/@types"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/types.ts", "src/functions/App.tsx"],
+  "include": ["src/**/*.ts", "src/types.ts"],
   "exclude": [
     "tsconfig.json",
     "cdk.out",
