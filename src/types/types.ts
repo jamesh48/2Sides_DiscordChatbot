@@ -24,7 +24,7 @@ export interface DiscordEventRequest {
   attemptedEmail: UserEmail;
   x: string;
   // For CommandLambda only event.routeCommand->
-  routeCommand: RouteCommand;
+  command: RouteCommand;
 }
 
 /**

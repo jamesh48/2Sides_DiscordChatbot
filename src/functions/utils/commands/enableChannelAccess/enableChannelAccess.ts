@@ -16,7 +16,7 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
   // Get Access Code
   const { data: oAuthData } = await axios.post(
     "https://discord.com/api/oauth2/token",
-    getAccessCodeParams(code)
+    getAccessCodeParams(code, null)
   );
 
   // Get User from Access Code

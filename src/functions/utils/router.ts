@@ -5,10 +5,7 @@ export const routePath = (event: DiscordEventRequest) => {
   let commandMethod: string = "";
   let protectedRoute: boolean = false;
 
-  if (event.code) {
-    routeCommand = "accessCode";
-    commandMethod = "GET";
-  } else if (event.json?.data?.command === "enableNewChannels") {
+  if (event.json?.data?.command === "enableNewChannels") {
     routeCommand = "enableNewChannels";
     commandMethod = "POST";
     protectedRoute = true;
@@ -29,6 +26,13 @@ export const routePath = (event: DiscordEventRequest) => {
   } else if (event.json?.data?.command === "registerAdditionalEmail") {
     routeCommand = "registerAdditionalEmail";
     commandMethod = "POST";
+  } else if (event.command === "registrationPortal") {
+    routeCommand = "registrationPortal";
+    commandMethod = "GET";
+    // Todo- Change this to event.command in discord (requires changing the embed as well).
+  } else if (event.code) {
+    routeCommand = "accessCode";
+    commandMethod = "GET";
   } else if (event.json?.data?.command === "automationFailAlert") {
     routeCommand = "automationFailAlert";
     commandMethod = "POST";

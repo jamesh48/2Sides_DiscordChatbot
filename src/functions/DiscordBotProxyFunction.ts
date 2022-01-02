@@ -17,6 +17,8 @@ import {
 } from "./utils/commands/commandIndex";
 
 import { routePath } from "./utils/router";
+import { makeRegistrationPortal } from "./utils/registrationPortals/makeRegistrationPortal";
+import { getUserFromCode } from "./utils/commands/getUserFromCode/getUserFromCode";
 
 export async function handler(event: DiscordEventRequest) {
   console.log(JSON.stringify(event));
@@ -114,6 +116,14 @@ export async function handler(event: DiscordEventRequest) {
         const htmlErrorPage: DiscordEventResponse = makeHtmlErr(errMessageStr);
         return htmlErrorPage;
       }
+    }
+
+    if (routeCommand === "registrationPortal") {
+      const candidate = await getUserFromCode(event.code);
+      return makeRegistrationPortal(
+        JSON.stringify(candidate.id),
+        JSON.stringify(candidate.username)
+      );
     }
   }
 

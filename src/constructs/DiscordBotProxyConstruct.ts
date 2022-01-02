@@ -117,6 +117,7 @@ export class DiscordBotProxyConstruct extends Construct {
               "email": "$input.params(\'email\')",\r\n\
               "x": "$input.params(\'x\')",\r\n\
               "attemptedEmail": "$input.params(\'attemptedEmail\')",\r\n\
+              "command": "$input.params(\'command\')",\r\n\
               "tempRandToken": "$input.params(\'tempRandToken\')"\r\n\
             }'
         },

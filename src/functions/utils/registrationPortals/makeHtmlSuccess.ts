@@ -279,7 +279,7 @@ export const makeHtmlSuccess = (
             <div id='form-container'>
               <div id='input-form-msg-container'>
                 <h4 className='input-form-msg'>The email <strong><em>{registeredUsersEmail}</em></strong> was used to register your Guild Subscription</h4>
-                <h4 className='input-form-msg'>If you have bought additional dannygoldsmithmagic products with a different email, you can gain access to their exclusive rooms by entering that email or multiple emails here:</h4>
+                <h4 className='input-form-msg'>If you have bought additional dannygoldsmithmagic products with a different email, you can gain access to their exclusive rooms by entering the associated email or emails here:</h4>
               </div>
               {validationMsgArr.length &&
                 <div className='validation-msg-container'>
@@ -310,7 +310,7 @@ export const makeHtmlSuccess = (
                     <h4 id='channels-granted'>{props.verifiedChannelsGranted}</h4>
                   </div>) || ""}
                   <InputForm discordId={props.discordId} registeredUsername={props.registeredUsername} />
-                  <a href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
+                  <a id='access-guild-link' href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
             </div>
 
           )
@@ -385,7 +385,7 @@ export const makeHtmlSuccess = (
                   ? <AttemptedChannelsGranted
                        attemptedUsersEmail={props.registeredUsersEmail}
                        attemptedChannelsGranted={props.verifiedChannelsGranted}
-                    /> : <div>No related channels were found relating to {props.registeredUsersEmail} this error should not show, check to see if you have access and if you don't please contact info@dannygoldsmithmagic.com</div>
+                    /> : <div>No related channels were found relating to {props.registeredUsersEmail} this error should not show, check to see if you have access and if you still do not please contact info@dannygoldsmithmagic.com</div>
                 }
               </div>
               <hr/>
