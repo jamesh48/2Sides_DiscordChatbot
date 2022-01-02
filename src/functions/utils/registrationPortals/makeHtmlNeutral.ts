@@ -1,4 +1,11 @@
-export const makeHtmlNeutral = (errMessage: string, discordId: string, username: string) => {
+import { DiscordId, UserEmail, Username } from "types/staticTypes";
+
+export const makeHtmlNeutral = (
+  errMessage: string,
+  discordId: DiscordId,
+  username: Username,
+  attemptedEmail: UserEmail
+) => {
   return (
     /* html */
     `<!DOCTYPE html>
@@ -116,6 +123,7 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string, username:
               }
 
               #redeemer-input-submit:hover {
+                cursor: pointer;
                 background-color: green;
               }
 
@@ -137,6 +145,7 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string, username:
             const errMessage = ${errMessage};
             const discordId = ${discordId};
             const username = ${username};
+            const attemptedEmail = ${attemptedEmail};
 
             const InputForm = (props) => {
               const [emailVal, setEmailVal] = React.useState("");
@@ -193,6 +202,7 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string, username:
                         discordId: props.discordId,
                         email: memoedEmailVal,
                         username: props.username,
+                        attemptedEmail: props.attemptedEmail,
                         command: 'redeem'
                       }
                     }
@@ -237,12 +247,19 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string, username:
                       .map((x, i) => <p key={i} className='error-detail'>{x}</p>)
                   }
                   </div>
-                  <InputForm discordId={props.discordId} username={props.username}/>
+                  <InputForm discordId={props.discordId} username={props.username} attemptedEmail={props.attemptedEmail}/>
               </div>
                 )
             }
 
-            ReactDOM.render(<App errMessage={errMessage} discordId={discordId} username={username}/>, document.getElementById("root"));
+            ReactDOM.render(
+              <App
+              errMessage={errMessage}
+              discordId={discordId}
+              username={username}
+              attemptedEmail={attemptedEmail}
+              />,
+              document.getElementById("root"));
 
             </script>
         </body>

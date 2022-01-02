@@ -1,12 +1,15 @@
+/* eslint-disable max-len */
 import { DiscordChannelsStr, DiscordId, UserEmail, Username } from "types/staticTypes";
 
 /* eslint-disable operator-linebreak */
 export const makeHtmlSuccess = (
-  channelsGranted: DiscordChannelsStr,
+  verifiedChannelsGranted: DiscordChannelsStr,
+  attemptedChannelsGranted: DiscordChannelsStr,
   discordId: DiscordId,
   registeredUsersEmail: UserEmail,
+  attemptedUsersEmail: UserEmail,
   registeredUsername: Username,
-  addEmailIndicator: boolean
+  redeemerIndicator: boolean
 ) => {
   return (
     /* html */
@@ -87,11 +90,13 @@ export const makeHtmlSuccess = (
         .access-announcement {
           text-decoration: underline;
           font-size: 1.75vmax;
+          text-underline-offset: .5rem;
         }
 
         .access-granted,
         .exclusive-access-container,
         #channels-granted,
+        .channels-granted-add-email,
         #access-guild-link
         {
           font-size: 1.5vmax;
@@ -117,11 +122,19 @@ export const makeHtmlSuccess = (
           margin: 5% 0;
         }
 
-        #input-form-msg-container, .input-form-msg, .validation-msg-container {
-          margin: 0 0 1.25% 0;
+        .channels-granted-add-email {
+          margin: 2% 0 3% 0;
         }
 
-        #channels-granted, #access-guild-link {
+        #input-form-msg-container, .input-form-msg, .validation-msg-container {
+          margin: 0 0 1.25% 0;
+          font-weight: 500;
+          font-size: 1.1vmax;
+        }
+
+        #channels-granted,
+        .channels-granted-add-email,
+        #access-guild-link {
           text-decoration: underline;
           text-decoration-thickness: from-font;
           text-underline-offset: 0.75rem;
@@ -175,6 +188,17 @@ export const makeHtmlSuccess = (
           background-color: gray;
         }
 
+        hr {
+          margin: 1.75% 0;
+          width: 50%;
+          border: 1px solid ivory;
+          box-shadow:ivory: 0rem .25rem 0.75rem;
+        }
+
+        .default-attempted-msg {
+          font-weight: 500;
+        }
+
       </style>
     </head>
 
@@ -182,11 +206,13 @@ export const makeHtmlSuccess = (
     <div id='root'></div>
         <script type='text/babel'>
 
-        const channelsGranted = ${channelsGranted};
+        const verifiedChannelsGranted = ${verifiedChannelsGranted};
+        const attemptedChannelsGranted = ${attemptedChannelsGranted};
         const discordId = ${discordId};
         const registeredUsersEmail = ${registeredUsersEmail};
-        const addEmailIndicator = ${addEmailIndicator};
+        const redeemerIndicator = ${redeemerIndicator};
         const registeredUsername = ${registeredUsername};
+        const attemptedUsersEmail = ${attemptedUsersEmail};
 
         const InputForm = (props) => {
           const [emailVal, setEmailVal] = React.useState('');
@@ -252,7 +278,7 @@ export const makeHtmlSuccess = (
           return (
             <div id='form-container'>
               <div id='input-form-msg-container'>
-                <h4 className='input-form-msg'>The email {registeredUsersEmail} was used to register your Guild Subscription</h4>
+                <h4 className='input-form-msg'>The email <strong><em>{registeredUsersEmail}</em></strong> was used to register your Guild Subscription</h4>
                 <h4 className='input-form-msg'>If you have bought additional dannygoldsmithmagic products with a different email, you can gain access to their exclusive rooms by entering that email or multiple emails here:</h4>
               </div>
               {validationMsgArr.length &&
@@ -272,16 +298,16 @@ export const makeHtmlSuccess = (
           )
         }
 
-        const App = (props) => {
+        const InitialSuccessApp = (props) => {
           return (
             <div id='success-container'>
               <h4 className='access-announcement'>Welcome to the Guild!</h4>
               <h5 className='access-granted'>Your access has been granted</h5>
               <div id='magic-img-container'></div>
-              {(props.channelsGranted.length &&
+              {(props.verifiedChannelsGranted.length &&
                   <div className='exclusive-access-container'>
                     <h5>You have also been granted access to the exclusive channels associated with these purchases:</h5>
-                    <h4 id='channels-granted'>{props.channelsGranted}</h4>
+                    <h4 id='channels-granted'>{props.verifiedChannelsGranted}</h4>
                   </div>) || ""}
                   <InputForm discordId={props.discordId} registeredUsername={props.registeredUsername} />
                   <a href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
@@ -290,18 +316,81 @@ export const makeHtmlSuccess = (
           )
         }
 
-        const AddEmailApp = (props) => {
+        const VerificationChannelsGranted = (props) => {
+          return (
+            <div>
+              <h5 className='input-form-msg'>The email <strong><em>{props.registeredUsersEmail}</em></strong> was used to grant your access to the Guild as well as these channels:</h5>
+              <h4 className='channels-granted-add-email'>{props.verifiedChannelsGranted}</h4>
+            </div>
+          )
+        }
+
+        const DefaultVerificationMessage = (props) => {
+          return (
+            <div>
+              <h5 className='input-form-msg'>The email <strong><em>{props.registeredUsersEmail}</em></strong> was used to grant your access to the Guild.</h5>
+           </div>
+          )
+        }
+
+        const AttemptedChannelsGranted = (props) => {
+          return (
+            <div>
+              <h5 className='input-form-msg'>The email <strong><em>{props.attemptedUsersEmail}</em></strong> was used to grant access to additional channels.</h5>
+              <h4 className='channels-granted-add-email'>{props.attemptedChannelsGranted}</h4>
+            </div>
+          )
+        }
+
+        const DefaultAttemptedMessage = (props) => {
+          return (
+            <div>
+              <h5 className='default-attempted-msg'>By the way, I also looked up <strong><em>{props.attemptedUsersEmail}</em></strong> but didn't find any purchased products related to that email</h5>
+            </div>
+          )
+        }
+
+        const VerificationCompleteApp = (props) => {
           return (
             <div id='success-container'>
-              <h4 className='access-announcement'>Success!</h4>
+              <h4 className='access-announcement'>Welcome to the Guild!</h4>
+              <h5 className='access-granted'>Your access has been granted</h5>
               <div id='magic-img-container'></div>
               <div className='exclusive-access-container'>
-                <h5>Your access has been granted to these exclusive channels:</h5>
-                <h4 id='channels-granted'>{props.channelsGranted}</h4>
-                <div id='input-form-msg-container'>
-                  <h5>The email {props.registeredUsersEmail} was used to register your additional products.</h5>
-                  <h5>If you have bought additional dannygoldsmithmagic products with a different email you can register them using the registration portal channel inside the Guild</h5>
-                </div>
+                {
+                  props.verifiedChannelsGranted.length ? <VerificationChannelsGranted {...props} /> : <DefaultVerificationMessage {...props}/>
+                }
+                {
+                  props.attemptedChannelsGranted.length ? <AttemptedChannelsGranted {...props}/> : <DefaultAttemptedMessage {...props}/>
+                }
+              </div>
+              <hr/>
+              <div className='future-access-info-container'>
+                <h5 className='input-form-msg'>Future exclusive access permissions associated to product purchases with <strong><em>{props.registeredUsersEmail}</em></strong> will <em>automatically</em> be granted.</h5>
+                <h5 className='input-form-msg'>Future exclusive access permissions associated to product purchases with <strong><em>{props.attemptedUsersEmail}</em></strong> or other email, can be granted via the registration portal inside the Guild.</h5>
+              </div>
+              <a id='access-guild-link' href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
+            </div>
+          )
+        }
+
+        const VerifiedChannelsOnlyApp = (props) => {
+          return (
+            <div id='success-container'>
+              <h4 className='access-announcement'>Channel Access Granted!</h4>
+              <div id='magic-img-container'></div>
+              <div className='exclusive-access-container'>
+                {
+                  props.verifiedChannelsGranted.length
+                  ? <AttemptedChannelsGranted
+                       attemptedUsersEmail={props.registeredUsersEmail}
+                       attemptedChannelsGranted={props.verifiedChannelsGranted}
+                    /> : <div>No related channels were found relating to {props.registeredUsersEmail} this error should not show, check to see if you have access and if you don't please contact info@dannygoldsmithmagic.com</div>
+                }
+              </div>
+              <hr/>
+              <div className='future-access-info-container'>
+                <h5 className='input-form-msg'>Future exclusive access permissions associated to product purchases with <strong><em>{props.registeredUsersEmail}</em></strong> or other email, can be granted via the registration portal inside the Guild.</h5>
               </div>
               <a id='access-guild-link' href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
             </div>
@@ -309,18 +398,25 @@ export const makeHtmlSuccess = (
         }
 
       ReactDOM.render(
-        addEmailIndicator ?
-        <AddEmailApp
-          channelsGranted={channelsGranted}
+      redeemerIndicator && attemptedUsersEmail ?
+        <VerificationCompleteApp
+          verifiedChannelsGranted={verifiedChannelsGranted}
+          attemptedChannelsGranted={attemptedChannelsGranted}
           registeredUsersEmail={registeredUsersEmail}
+          attemptedUsersEmail={attemptedUsersEmail}
         />
-        :
-        <App
-          channelsGranted={channelsGranted}
-          discordId={discordId}
-          registeredUsersEmail={registeredUsersEmail}
-          registeredUsername={registeredUsername}
-        />,
+          : redeemerIndicator ?
+            <VerifiedChannelsOnlyApp
+              verifiedChannelsGranted={verifiedChannelsGranted}
+              registeredUsersEmail={registeredUsersEmail}
+            />
+            : <InitialSuccessApp
+              verifiedChannelsGranted={verifiedChannelsGranted}
+              discordId={discordId}
+              registeredUsersEmail={registeredUsersEmail}
+              registeredUsername={registeredUsername}
+              attemptedUsersEmail={attemptedUsersEmail}
+            />,
         document.getElementById("root")
       );
       </script>

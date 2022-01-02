@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { UserEmail } from "types/staticTypes";
 
-export const redeemConfig = (email: UserEmail) => {
+export const redeemConfig = (email: UserEmail, attemptedEmail: UserEmail) => {
   // @ts-ignore
   const { wixWebsiteName, wixAPIKey } = JSON.parse(process.env.WIX_CREDENTIALS);
 
@@ -9,7 +9,8 @@ export const redeemConfig = (email: UserEmail) => {
     method: "POST",
     url: `${wixWebsiteName}/_functions/randomToken`,
     params: {
-      email
+      email,
+      attemptedEmail
     },
     headers: {
       Authorization: wixAPIKey

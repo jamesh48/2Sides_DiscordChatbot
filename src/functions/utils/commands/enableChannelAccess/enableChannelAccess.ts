@@ -41,7 +41,9 @@ export async function enableChannelAccess(code: CodeFromDiscord) {
         "||" +
         candidateUser.id +
         "||" +
-        candidateUser.username
+        candidateUser.username +
+        "||" +
+        candidateUser.email
     );
   }
 

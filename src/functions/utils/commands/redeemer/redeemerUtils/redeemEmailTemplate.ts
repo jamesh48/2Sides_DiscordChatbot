@@ -1,16 +1,23 @@
 /* eslint-disable indent */
-import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail } from "types/staticTypes";
+import {
+  DiscordChannelsStr,
+  DiscordId,
+  TempRandToken,
+  UserEmail,
+  Username
+} from "types/staticTypes";
 
 export const redeemEmailTemplate = (
   userEmail: UserEmail,
   channelsToJoin: DiscordChannelsStr,
   tempRandToken: TempRandToken,
   discordId: DiscordId,
-  username: UserEmail
+  username: Username,
+  attemptedEmail: UserEmail
 ) => {
   // @ts-ignore
   const { wixWebsiteName } = JSON.parse(process.env.WIX_CREDENTIALS);
-  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?command=verification&tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}`;
+  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?command=verification&tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}&attemptedEmail=${attemptedEmail}`;
 
   return `<!DOCTYPE html>
 <html>

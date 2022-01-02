@@ -48,24 +48,28 @@ export async function handler(event: DiscordEventRequest) {
               .replace("The Guild Patron", "")
               .replace("The Guild", "")
           ),
+          JSON.stringify(""),
           discordIdStr,
           registerUsersEmailStr,
+          JSON.stringify(""),
           registeredUsernameStr,
           false
         );
         return htmlSuccessPage;
       } catch (err: any) {
-        const [errMessage, discordId, username] = err.message.split("||");
+        const [errMessage, discordId, username, attemptedEmail] = err.message.split("||");
 
         const errMessageStr = JSON.stringify(errMessage);
         const discordIdStr = JSON.stringify(discordId);
         const usernameStr = JSON.stringify(username);
+        const attemptedEmailStr = JSON.stringify(attemptedEmail);
 
         if (errMessageStr.indexOf("404") !== -1) {
           const htmlNeutralPage: DiscordEventResponse = makeHtmlNeutral(
             errMessageStr,
             discordIdStr,
-            usernameStr
+            usernameStr,
+            attemptedEmailStr
           );
           return htmlNeutralPage;
         } else {
@@ -79,24 +83,27 @@ export async function handler(event: DiscordEventRequest) {
     // Accomplishes the same enableChannels given a tempRandToken.
     if (routeCommand === "verification") {
       try {
-        const channelsGranted = await verifyUser(
+        const [verifiedUserProductArr, attemptedUserProductArr] = await verifyUser(
           event.discordId,
           event.tempRandToken,
-          event.email
+          event.email,
+          event.attemptedEmail
         );
 
         const htmlSuccessPage: DiscordEventResponse = makeHtmlSuccess(
           JSON.stringify(
-            channelsGranted
+            verifiedUserProductArr
               .replace("The Guild Patron,", "")
               .replace("The Guild,", "")
               .replace("The Guild Patron", "")
               .replace("The Guild", "")
           ),
+          JSON.stringify(attemptedUserProductArr),
           JSON.stringify(event.discordId),
           JSON.stringify(event.email),
+          JSON.stringify(event.attemptedEmail),
           JSON.stringify(""),
-          !!event.x
+          true
         );
         return htmlSuccessPage;
       } catch (err: any) {
@@ -135,7 +142,8 @@ export async function handler(event: DiscordEventRequest) {
         await redeem(
           event.json.data.email,
           event.json.data.discordId,
-          event.json.data.username
+          event.json.data.username,
+          event.json.data.attemptedEmail
         );
         return (
           "An email has been sent to " +

@@ -80,7 +80,7 @@ export const emailTemplate = (
     <table id="table-root">
       <tr>
         <td class="email-line-item">
-          A request was made by user <b>${username}</b> to enable a Discord
+          A request was made by Discord User <b>${username}</b> to enable a Discord
           Guild Access purchase from:
         </td>
         <td class="email-line-item">

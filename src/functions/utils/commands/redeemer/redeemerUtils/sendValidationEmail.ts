@@ -12,7 +12,8 @@ export const sendValidationEmail = async (
   discordChannels: DiscordChannelsStr,
   tempRandToken: TempRandToken,
   discordId: DiscordId,
-  username: Username
+  username: Username,
+  attemptedEmail: UserEmail
 ) => {
   const sgMail = require("@sendgrid/mail");
   // @ts-ignore, only undefined in local dev
@@ -23,7 +24,7 @@ export const sendValidationEmail = async (
     to: _to,
     from: "dannygoldsmithmagic@gmail.com",
     subject: "Please Verify Your Email with Danny Goldsmith Magic",
-    html: redeemEmailTemplate(_to, discordChannels, tempRandToken, discordId, username)
+    html: redeemEmailTemplate(_to, discordChannels, tempRandToken, discordId, username, attemptedEmail)
   };
 
   await sgMail.send(outboundEmail);

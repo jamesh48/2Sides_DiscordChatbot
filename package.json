@@ -17,7 +17,7 @@
     "lint": "eslint src/*/*.ts",
     "fix-lint": "eslint src/*/*.ts --fix",
     "test": "mocha",
-    "cdk:deploy": "tsc && cdk deploy DiscordBotStack --profile ProductionAccount"
+    "deploy": "tsc && cdk deploy DiscordBotProxyStack --profile ProductionAccount"
   },
   "jest": {
     "preset": "ts-jest",

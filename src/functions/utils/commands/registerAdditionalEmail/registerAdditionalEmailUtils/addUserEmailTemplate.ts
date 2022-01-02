@@ -8,7 +8,7 @@ export const addUserEmailTemplate = (
   discordId: DiscordId,
   username: Username
 ) => {
-  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?command=verification&tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}&x=x`;
+  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?command=verification&tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}`;
   const { wixWebsiteName } = JSON.parse(process.env.WIX_CREDENTIALS || "");
   return `
   <DOCTYPE html>
@@ -85,7 +85,7 @@ export const addUserEmailTemplate = (
     <table id="table-root">
       <tr>
         <td class="email-line-item">
-          A request was made by user <b>${username}</b> to enable additional product purchases from:
+          A request was made by Discord User <b>${username}</b> to enable additional product purchases from:
         </td>
         <td class="email-line-item">
           <b>${wixWebsiteName}</b>
