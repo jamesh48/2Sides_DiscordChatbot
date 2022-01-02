@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { DiscordId, UserEmail } from "staticTypes";
+import { DiscordId, UserEmail } from "types/staticTypes";
 
 export const getUsersRegisteredProductsConfig = (
   candidateUserID: DiscordId,

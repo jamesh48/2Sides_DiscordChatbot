@@ -1,4 +1,4 @@
-import { CodeFromDiscord } from "staticTypes";
+import { CodeFromDiscord } from "types/staticTypes";
 import { URLSearchParams } from "url";
 
 export const getAccessCodeParams = (code: CodeFromDiscord) => {

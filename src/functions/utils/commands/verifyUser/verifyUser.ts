@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DiscordChannel, DiscordId, TempRandToken, UserEmail } from "staticTypes";
+import { DiscordChannel, DiscordId, TempRandToken, UserEmail } from "types/staticTypes";
 import { deleteNewUserRoleConfig } from "../enableChannelAccess/enableChannelAccessConfigs/deleteNewUserRoleConfig";
 import { putMemberRoleConfig } from "../enableChannelAccess/enableChannelAccessConfigs/putMemberRoleConfig";
 import { grantAccessToPrivateChannels } from "../enableChannelAccess/enableChannelAccessUtils/grantAccessToPrivateChannels";

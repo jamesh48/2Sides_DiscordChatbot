@@ -14,7 +14,6 @@ export class DiscordBotProxyStack extends Stack {
    */
   constructor(scope: Construct, id: string) {
     super(scope, id);
-
     new DiscordBotProxyConstruct(this, "discord-bot-proxy-endpoint");
   }
 }

@@ -10,7 +10,7 @@ import {
 
 import { getAccessCodeParams, getUserParams } from "./authConfigs/authConfigIndex";
 
-import { CodeFromDiscord, DiscordChannel } from "staticTypes";
+import { CodeFromDiscord, DiscordChannel } from "types/staticTypes";
 
 export async function enableChannelAccess(code: CodeFromDiscord) {
   // Get Access Code

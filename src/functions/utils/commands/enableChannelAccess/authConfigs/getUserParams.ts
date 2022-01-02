@@ -1,4 +1,4 @@
-import { DiscordAccessToken, DiscordTokenType } from "staticTypes";
+import { DiscordAccessToken, DiscordTokenType } from "types/staticTypes";
 
 export const getUserParams = (
   tokenType: DiscordTokenType,

@@ -1,4 +1,4 @@
-import { UserEmail } from "staticTypes";
+import { UserEmail } from "types/staticTypes";
 import { kickEmailTemplate } from "./kickEmailTemplate";
 
 const sendKickEmail = async function (_to: UserEmail) {

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { DiscordId, UserEmail, Username } from "staticTypes";
+import { DiscordId, UserEmail, Username } from "types/staticTypes";
 import { sendValidationEmail } from "./redeemerUtils/sendValidationEmail";
 import { redeemConfig } from "./reedeemerConfigs/reedemConfig";
 

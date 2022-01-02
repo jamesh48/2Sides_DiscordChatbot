@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { UserEmail } from "staticTypes";
+import { UserEmail } from "types/staticTypes";
 
 import {
   discordIDConfig,

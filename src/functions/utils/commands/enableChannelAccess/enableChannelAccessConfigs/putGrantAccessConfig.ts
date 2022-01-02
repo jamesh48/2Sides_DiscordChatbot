@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { DiscordId, DiscordRoleId } from "staticTypes";
+import { DiscordId, DiscordRoleId } from "types/staticTypes";
 
 export const putGrantAccessConfig = (discordUserId: DiscordId, roleID: DiscordRoleId) => {
   // @ts-ignore, undefined only in local env

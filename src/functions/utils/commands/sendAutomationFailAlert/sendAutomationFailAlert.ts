@@ -1,4 +1,4 @@
-import { DiscordChannelsStr, DiscordId, UserEmail } from "staticTypes";
+import { DiscordChannelsStr, DiscordId, UserEmail } from "types/staticTypes";
 import { automationFailAlertTemplate } from "./sendAutomationFailUtils/automationFailAlertTemplate";
 
 export const sendAutomationFailAlert = async (

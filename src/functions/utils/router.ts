@@ -1,4 +1,4 @@
-import { DiscordEventRequest } from "Types";
+import { DiscordEventRequest } from "types/types";
 
 export const routePath = (event: DiscordEventRequest) => {
   let routeCommand: string = "";

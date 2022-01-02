@@ -1,4 +1,4 @@
-import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail, Username } from "staticTypes";
+import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail, Username } from "types/staticTypes";
 import { addUserEmailTemplate } from "./addUserEmailTemplate";
 
 export const sendAddUserEmail = async (

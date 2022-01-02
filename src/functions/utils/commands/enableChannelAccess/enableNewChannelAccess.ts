@@ -1,4 +1,4 @@
-import { DiscordChannelsStr, DiscordId } from "staticTypes";
+import { DiscordChannelsStr, DiscordId } from "types/staticTypes";
 import { grantAccessToPrivateChannels } from "./enableChannelAccessUtils/grantAccessToPrivateChannels";
 
 export const enableNewChannelAccess = async (

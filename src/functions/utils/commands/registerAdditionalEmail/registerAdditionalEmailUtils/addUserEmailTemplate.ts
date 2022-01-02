@@ -1,4 +1,4 @@
-import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail, Username } from "staticTypes";
+import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail, Username } from "types/staticTypes";
 
 /* eslint-disable indent */
 export const addUserEmailTemplate = (

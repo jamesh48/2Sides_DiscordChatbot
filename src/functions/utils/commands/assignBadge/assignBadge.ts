@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserEmail } from "staticTypes";
+import { UserEmail } from "types/staticTypes";
 
 export const assignBadge = async (userEmail: UserEmail) => {
   // @ts-ignore

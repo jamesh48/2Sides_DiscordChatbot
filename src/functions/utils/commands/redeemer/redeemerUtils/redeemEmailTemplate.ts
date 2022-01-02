@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail } from "staticTypes";
+import { DiscordChannelsStr, DiscordId, TempRandToken, UserEmail } from "types/staticTypes";
 
 export const redeemEmailTemplate = (
   userEmail: UserEmail,

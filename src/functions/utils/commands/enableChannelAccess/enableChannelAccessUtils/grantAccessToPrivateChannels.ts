@@ -4,7 +4,7 @@ import {
   DiscordId,
   DiscordRoleId,
   DiscordRoleName
-} from "staticTypes";
+} from "types/staticTypes";
 import {
   getAllRolesConfig,
   putGrantAccessConfig

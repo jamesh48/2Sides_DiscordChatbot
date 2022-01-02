@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { UserEmail } from "staticTypes";
+import { UserEmail } from "types/staticTypes";
 
 export const redeemConfig = (email: UserEmail) => {
   // @ts-ignore

@@ -4,7 +4,7 @@ import {
   TempRandToken,
   UserEmail,
   Username
-} from "staticTypes";
+} from "types/staticTypes";
 import { redeemEmailTemplate } from "./redeemEmailTemplate";
 
 export const sendValidationEmail = async (

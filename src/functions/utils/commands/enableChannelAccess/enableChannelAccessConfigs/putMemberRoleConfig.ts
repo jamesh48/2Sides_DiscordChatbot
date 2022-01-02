@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { DiscordId } from "staticTypes";
+import { DiscordId } from "types/staticTypes";
 
 export const putMemberRoleConfig = (discordId: DiscordId) => {
   const {

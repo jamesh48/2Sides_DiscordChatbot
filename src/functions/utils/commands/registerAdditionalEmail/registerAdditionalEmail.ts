@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DiscordId, UserEmail, Username } from "staticTypes";
+import { DiscordId, UserEmail, Username } from "types/staticTypes";
 import { sendAddUserEmail } from "./registerAdditionalEmailUtils/sendAddUserEmail";
 import { postAdditionalEmailConfig } from "./registerAdditionalEmailConfigs/postAdditionalEmailConfig";
 

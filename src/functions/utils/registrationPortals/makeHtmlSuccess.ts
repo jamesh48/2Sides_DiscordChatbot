@@ -1,4 +1,4 @@
-import { DiscordChannelsStr, DiscordId, UserEmail, Username } from "staticTypes";
+import { DiscordChannelsStr, DiscordId, UserEmail, Username } from "types/staticTypes";
 
 /* eslint-disable operator-linebreak */
 export const makeHtmlSuccess = (

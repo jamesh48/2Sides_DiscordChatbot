@@ -1,5 +1,5 @@
 /* eslint-disable operator-linebreak */
-import { DiscordEventRequest, DiscordEventResponse } from "Types";
+import { DiscordEventRequest, DiscordEventResponse } from "types/types";
 import {
   makeHtmlErr,
   makeHtmlSuccess,

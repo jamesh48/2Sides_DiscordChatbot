@@ -6,7 +6,7 @@ import {
   RouteCommand,
   TempRandToken,
   UserEmail
-} from "staticTypes";
+} from "types/staticTypes";
 
 /**
  * The incoming request, created via API Gateway request templates.
