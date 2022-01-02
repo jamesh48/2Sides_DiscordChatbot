@@ -5,19 +5,30 @@ export const makeHtmlErr = (errMessage: string) => {
 <html>
   <head>
     <title>Registration Error</title>
+      <script>window.history.replaceState(null, '', '/');</script>
       <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/x-mark-16.ico">
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
       <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
       <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <style>
+    <style type="text/css">
+
+    @font-face {
+      font-family: 'Raleway';
+      font-style: normal;
+      font-weight: 200;
+      src: local('Raleway'), url(https://fonts.gstatic.com/s/raleway/v9/UAnF6lSK1JNc1tqTiG8pNALUuEpTyoUstqEm5AMlJo4.ttf) format('truetype');
+    }
+
     html {
       background: rgb(0,0,0);
       background: -moz-radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(121,9,83,1) 100%);
       background: -webkit-radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(121,9,83,1) 100%);
       background: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(121,9,83,1) 100%);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#790953",GradientType=1);
+      font-family: Raleway;
       }
+
       html, body {
         height: 100%;
       }

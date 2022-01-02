@@ -27,6 +27,7 @@ import { postRandomToken } from "./router/postRandomToken.js";
 import { postAdditionalEmail } from "./router/postAdditionalEmail.js";
 import { usersDiscordId } from "./router/getUsersDiscordId.js";
 import { addBadge } from "./eventRouter/eventRouterUtils/addBadge.js";
+import { handleAutomationError } from "./eventRouter/eventRouterUtils/handleAutomationError";
 // import { updateLoop } from './eventRouter/eventRouterUtils/addBadge.js';
 
 export async function get_usersRegisteredProducts(req) {
@@ -51,12 +52,14 @@ export async function get_usersRegisteredProducts(req) {
 
 export async function get_usersDiscordId(req) {
   try {
-    await validateCredentials(req);
+    // await validateCredentials(req);
     const discordId = await usersDiscordId(req);
     resObj.body.message = discordId;
     return ok(resObj);
   } catch (err) {
     console.log(err);
+    await handleAutomationError(err.message.split("||"), "Kick Member");
+    return notFound(resObj);
   }
 }
 
@@ -98,9 +101,7 @@ export async function post_randomToken(req) {
 }
 
 export async function post_assignBadge(req) {
-  console.log("request email->", req.query.email);
   await addBadge(req.query.email);
-
   return ok(req);
 }
 

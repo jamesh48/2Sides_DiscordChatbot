@@ -1,9 +1,11 @@
 export const makeRegistrationPortal = () => {
-  return `
+  return /* html */ `
   <!DOCTYPE html>
   <html>
     <head>
       <title>Registration Portal</title>
+      <script>window.history.replaceState(null, '', '/');</script>
+
       <style>
         html, body {
           height: 100%;

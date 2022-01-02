@@ -22,7 +22,13 @@ export const makeHtmlSuccess = (
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
-      <style>
+      <style type="text/css">
+        @font-face {
+          font-family: 'Raleway';
+          font-style: normal;
+          font-weight: 200;
+          src: local('Raleway'), url(https://fonts.gstatic.com/s/raleway/v9/UAnF6lSK1JNc1tqTiG8pNALUuEpTyoUstqEm5AMlJo4.ttf) format('truetype');
+        }
 
         html {
           background: rgb(253,187,45);
@@ -30,7 +36,10 @@ export const makeHtmlSuccess = (
           background: -webkit-radial-gradient(circle, rgba(253,187,45,1) 40%, rgba(32,190,92,1) 100%);
           background: radial-gradient(circle, rgba(253,187,45,1) 40%, rgba(32,190,92,1) 100%);
           filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fdbb2d",endColorstr="#20be5c",GradientType=1);
+          font-family: Raleway;
         }
+
+
 
         h4, h5 {
           margin: 0;

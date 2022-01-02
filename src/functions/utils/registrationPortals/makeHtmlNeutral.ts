@@ -5,19 +5,29 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string, username:
       <html>
         <head>
           <title>Registration Portal</title>
+            <script>window.history.replaceState(null, '', '/');</script>
             <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/questionMark.ico">
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
             <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-          <style>
-            html {
-              background: rgb(0,212,255);
-              background: -moz-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
-              background: -webkit-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
-              background: radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
-              filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00d4ff",endColorstr="#0000e8",GradientType=1);
+          <style type="text/css">
+              @font-face {
+                font-family: 'Raleway';
+                font-style: normal;
+                font-weight: 200;
+                src: local('Raleway'), url(https://fonts.gstatic.com/s/raleway/v9/UAnF6lSK1JNc1tqTiG8pNALUuEpTyoUstqEm5AMlJo4.ttf) format('truetype');
               }
+
+              html {
+                background: rgb(0,212,255);
+                background: -moz-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
+                background: -webkit-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
+                background: radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00d4ff",endColorstr="#0000e8",GradientType=1);
+                font-family: Raleway;
+              }
+
               html, body {
                 height: 100%;
               }

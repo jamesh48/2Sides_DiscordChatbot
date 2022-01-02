@@ -10,7 +10,7 @@ export const redeemEmailTemplate = (
 ) => {
   // @ts-ignore
   const { wixWebsiteName } = JSON.parse(process.env.WIX_CREDENTIALS);
-  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}`;
+  const validationLink = `https://ws4mcufss9.execute-api.us-east-1.amazonaws.com/prod/event?command=verification&tempRandToken=${tempRandToken}&discordId=${discordId}&email=${userEmail}`;
 
   return `<!DOCTYPE html>
 <html>
