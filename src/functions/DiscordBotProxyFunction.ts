@@ -1,20 +1,25 @@
 /* eslint-disable operator-linebreak */
 import { DiscordEventRequest, DiscordEventResponse } from "Types";
-import { makeHtmlErr } from "./makeHtmlErr";
-import { makeHtmlSuccess } from "./makeHtmlSuccess";
+import {
+  makeHtmlErr,
+  makeHtmlSuccess,
+  makeHtmlNeutral
+} from "./utils/registrationPortals/registrationPortalIndex";
 import {
   assignBadge,
   enableChannelAccess,
   enableNewChannelAccess,
   kickMember,
   redeem,
-  registerAdditionalEmail
-} from "lambda/lambdaServer/commands/commandIndex";
-import { verifyUser } from "lambda/lambdaServer/commands/verifyUser/verifyUser";
+  registerAdditionalEmail,
+  verifyUser,
+  sendAutomationFailAlert
+} from "./utils/commands/commandIndex";
+
 import { routePath } from "./utils/router";
-import { makeHtmlNeutral } from "./utils/makeHtmlNeutral";
 
 export async function handler(event: DiscordEventRequest) {
+  console.log(JSON.stringify(event));
   const [routeCommand, commandMethod, protectedRoute] = routePath(event);
 
   if (protectedRoute) {
@@ -28,11 +33,12 @@ export async function handler(event: DiscordEventRequest) {
   if (commandMethod === "GET") {
     if (routeCommand === "accessCode") {
       try {
-        const [channelsGranted, discordId, registeredUsersEmail] =
+        const [channelsGranted, discordId, registeredUsersEmail, registeredUsername] =
           await enableChannelAccess(event.code);
 
         const discordIdStr = JSON.stringify(discordId);
         const registerUsersEmailStr = JSON.stringify(registeredUsersEmail);
+        const registeredUsernameStr = JSON.stringify(registeredUsername);
 
         const htmlSuccessPage: DiscordEventResponse = makeHtmlSuccess(
           JSON.stringify(
@@ -43,19 +49,23 @@ export async function handler(event: DiscordEventRequest) {
               .replace("The Guild", "")
           ),
           discordIdStr,
-          registerUsersEmailStr
+          registerUsersEmailStr,
+          registeredUsernameStr,
+          false
         );
         return htmlSuccessPage;
       } catch (err: any) {
-        const [errMessage, discordId] = err.message.split("||");
+        const [errMessage, discordId, username] = err.message.split("||");
 
         const errMessageStr = JSON.stringify(errMessage);
         const discordIdStr = JSON.stringify(discordId);
+        const usernameStr = JSON.stringify(username);
 
         if (errMessageStr.indexOf("404") !== -1) {
           const htmlNeutralPage: DiscordEventResponse = makeHtmlNeutral(
             errMessageStr,
-            discordIdStr
+            discordIdStr,
+            usernameStr
           );
           return htmlNeutralPage;
         } else {
@@ -84,7 +94,9 @@ export async function handler(event: DiscordEventRequest) {
               .replace("The Guild", "")
           ),
           JSON.stringify(event.discordId),
-          JSON.stringify(event.email)
+          JSON.stringify(event.email),
+          JSON.stringify(""),
+          !!event.x
         );
         return htmlSuccessPage;
       } catch (err: any) {
@@ -117,38 +129,47 @@ export async function handler(event: DiscordEventRequest) {
       return "200";
     }
 
-    // POST request from error page, sends email with verification link.
+    // POST request from Registration Portal page, sends email with verification link.
     if (routeCommand === "redeem") {
       try {
-        await redeem(event.json.data.email, event.json.data.discordId);
+        await redeem(
+          event.json.data.email,
+          event.json.data.discordId,
+          event.json.data.username
+        );
         return (
           "An email has been sent to " +
           event.json.data.email +
           " to verify your Guild Subscription"
         );
       } catch (err: any) {
-        if (err.message.indexOf("404") !== -1) {
-          return (
-            "The Email " +
-            event.json.data.email +
-            " was not found, are you sure you entered it correctly?"
-          );
-        } else if (err.message.indexOf("400") !== -1) {
-          return "The email " + event.json.data.email + " is already registered";
-        } else {
-          return "There was an unknown error";
-        }
+        return err.message;
       }
     }
 
     if (routeCommand === "registerAdditionalEmail") {
       try {
-        await registerAdditionalEmail(event.json.data.email, event.json.data.discordId);
+        await registerAdditionalEmail(
+          event.json.data.email,
+          event.json.data.discordId,
+          event.json.data.username
+        );
         return `200 A verification email has been sent to ${event.json.data.email}`;
       } catch (err: any) {
         // Error message with 400 or 404 sent back to client.
         return err.message;
       }
+    }
+
+    if (routeCommand === "automationFailAlert") {
+      console.log("automation fail alert");
+      await sendAutomationFailAlert(
+        event.json.data.errMessage,
+        event.json.data.errEmail,
+        event.json.data.errDiscordID,
+        event.json.data.errChannels,
+        event.json.data.automationType
+      );
     }
   }
 

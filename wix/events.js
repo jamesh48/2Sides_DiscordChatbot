@@ -16,12 +16,14 @@
 *******************/
 import { handleOrderPaid } from "./eventRouter/handleOrderPaid.js";
 import { handlePlanPurchased } from "./eventRouter/handlePlanPurchased.js";
+import { handleAutomationError } from "./eventRouter/eventRouterUtils/handleAutomationError";
 
 export async function wixStores_onOrderPaid(event) {
   try {
     await handleOrderPaid(event);
   } catch (err) {
-    console.log(err.message);
+    console.log(err.message.split("||"));
+    await handleAutomationError(err.message.split("||"), "order paid");
   }
 }
 

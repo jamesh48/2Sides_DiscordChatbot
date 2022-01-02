@@ -17,7 +17,7 @@ export const revokeGuildAccess = async (req) => {
     throw new Error("Email not found");
   }
 
-  /* ----------------->UPDATE DB<------------------- */
+  //----------------->UPDATE DB<----------------------------------
   await Promise.each(purchasedProductArr, (item) => {
     const toUpdate = { ...item, discordID: null };
     return wixData.update("purchased_candidates", toUpdate, suppressOptions);

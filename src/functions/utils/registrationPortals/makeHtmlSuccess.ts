@@ -1,10 +1,13 @@
+import { DiscordChannelsStr, DiscordId, UserEmail, Username } from "staticTypes";
+
 /* eslint-disable operator-linebreak */
 export const makeHtmlSuccess = (
-  channelsGranted: string,
-  discordId: string,
-  registeredUsersEmail: string
+  channelsGranted: DiscordChannelsStr,
+  discordId: DiscordId,
+  registeredUsersEmail: UserEmail,
+  registeredUsername: Username,
+  addEmailIndicator: boolean
 ) => {
-  console.log("in makeHtmlSuccess", discordId);
   return (
     /* html */
     `
@@ -12,12 +15,15 @@ export const makeHtmlSuccess = (
   <html>
     <head>
       <title>Registration Success</title>
+        <script>window.history.replaceState(null, '', '/');</script>
         <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/checkmark-16.ico">
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
       <style>
+
         html {
           background: rgb(253,187,45);
           background: -moz-radial-gradient(circle, rgba(253,187,45,1) 40%, rgba(32,190,92,1) 100%);
@@ -26,70 +32,24 @@ export const makeHtmlSuccess = (
           filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fdbb2d",endColorstr="#20be5c",GradientType=1);
         }
 
+        h4, h5 {
+          margin: 0;
+        }
+
         html, body {
           height: 100%;
+          width: 100%;
+        }
+
+        #root {
+          width: 90%;
         }
 
         html {
           text-rendering: geometricPrecision;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
         }
 
-        body {
-          width: 90%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-
-        #success-container {
-          background-color: lightgreen;
-          border: .5px solid white;
-          justify-content: center;
-          padding: 1.5% 0;
-          box-shadow: white 0.25rem 0.25rem 0.5rem;
-        }
-
-        .access-announcement {
-          text-decoration: underline;
-          font-size: 1.75vmax;
-        }
-
-        .access-granted {
-          font-size: 1.5vmax;
-        }
-
-        .access-granted {
-          margin: 1.5% 0;
-        }
-
-        #channels-granted {
-          margin: 1% 0;
-          font-size: 1.5vmax;
-          text-decoration: underline;
-          text-decoration-thickness: from-font;
-          text-underline-offset: 0.75rem;
-        }
-
-        .exclusive-access-container, #self-destruct-message {
-          font-size: 1.25vmax;
-        }
-
-        .exclusive-access-container {
-          justify-content: center;
-          font-size: 1.5vmax;
-        }
-
-        #form-container {
-          padding: 1% 0;
-        }
-
-        #inputs-container {
-          display: flex;
-        }
+        html,
         #success-container,
         #form-container,
         #input-form-msg-container,
@@ -98,23 +58,108 @@ export const makeHtmlSuccess = (
           display: flex;
           flex-direction: column;
           align-items: center;
+          text-align: center;
         }
 
-        .input-form-text {
+        body {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+
+        #success-container {
+          background-color: lightgreen;
+          padding: 2.5% 0;
+          border: .5px solid white;
+          box-shadow: white 0.25rem 0.25rem 0.5rem;
+        }
+
+        .access-announcement {
+          text-decoration: underline;
+          font-size: 1.75vmax;
+        }
+
+        .access-granted,
+        .exclusive-access-container,
+        #channels-granted,
+        #access-guild-link
+        {
+          font-size: 1.5vmax;
+        }
+
+
+        .exclusive-access-container,
+        #self-destruct-message,
+        #access-guild-link {
+          font-size: 1.25vmax;
+        }
+
+        .access-announcement,
+        .access-granted,
+        #magic-img-container,
+        #form-container,
+        .validation-msg
+        {
+          margin: 0 0 1.5% 0;
+        }
+
+        #channels-granted {
+          margin: 5% 0;
+        }
+
+        #input-form-msg-container, .input-form-msg, .validation-msg-container {
+          margin: 0 0 1.25% 0;
+        }
+
+        #channels-granted, #access-guild-link {
+          text-decoration: underline;
+          text-decoration-thickness: from-font;
+          text-underline-offset: 0.75rem;
+        }
+
+        #access-guild-link {
+          margin: 1% 0;
+        }
+
+
+        .exclusive-access-container {
+          justify-content: center;
+        }
+
+        #magic-img-container {
+          background: url(https://discord-chatbot-icos.s3.amazonaws.com/dannygoldsmithmagic.png) no-repeat center;
+          width: 100%;
+          height: 5em;
+        }
+
+
+        #input-form {
+          width: 25%;
+        }
+
+        #inputs-container {
+          display: flex;
+        }
+
+        #input-form-text {
           background-color: darkcyan;
           text-align: center;
           flex: 1;
+          color: ivory;
         }
 
-        .input-form-text:focus {
+        #input-form-text:focus, #input-form-submit:hover {
           background-color: green;
+          cursor: pointer;
         }
-        .input-form-submit {
+        #input-form-submit {
           background-color: darkslategray;
+          color: ivory;
         }
 
-        .input-form-submit {
-          background-color: green;
+        #access-guild-link {
+          color: darkblue;
         }
 
         .input-form-input:disabled {
@@ -131,6 +176,8 @@ export const makeHtmlSuccess = (
         const channelsGranted = ${channelsGranted};
         const discordId = ${discordId};
         const registeredUsersEmail = ${registeredUsersEmail};
+        const addEmailIndicator = ${addEmailIndicator};
+        const registeredUsername = ${registeredUsername};
 
         const InputForm = (props) => {
           const [emailVal, setEmailVal] = React.useState('');
@@ -158,6 +205,7 @@ export const makeHtmlSuccess = (
                 data: {
                   email: savedEmailVal,
                   discordId: props.discordId,
+                  username: props.registeredUsername,
                   command: 'registerAdditionalEmail'
                 }
               }
@@ -195,14 +243,16 @@ export const makeHtmlSuccess = (
           return (
             <div id='form-container'>
               <div id='input-form-msg-container'>
-                <h4>The email {registeredUsersEmail} was used to register your Guild Subscription</h4>
-                <h4>If you have bought additional dannygoldsmithmagic products with a different email, you can gain access to their exclusive rooms by entering that email or multiple emails here:</h4>
+                <h4 className='input-form-msg'>The email {registeredUsersEmail} was used to register your Guild Subscription</h4>
+                <h4 className='input-form-msg'>If you have bought additional dannygoldsmithmagic products with a different email, you can gain access to their exclusive rooms by entering that email or multiple emails here:</h4>
               </div>
-              <div className='validation-msg-container'>
-                {validationMsgArr.map((x, i) => {
-                  return <p key={i} className='validation-msg'>{x}</p>
-                })}
-              </div>
+              {validationMsgArr.length &&
+                <div className='validation-msg-container'>
+                  {validationMsgArr.map((x, i) => {
+                    return <p key={i} className='validation-msg'>{x}</p>
+                  })}
+                </div> || null
+              }
               <form id='input-form' onSubmit={handleSubmit}>
                 <div id='inputs-container'>
                   <input className='input-form-input' id='input-form-text' type='text' onChange={handleChange} value={emailVal} disabled={!!submitting}></input>
@@ -214,26 +264,56 @@ export const makeHtmlSuccess = (
         }
 
         const App = (props) => {
-          console.log('in app', props.discordId)
           return (
             <div id='success-container'>
               <h4 className='access-announcement'>Welcome to the Guild!</h4>
               <h5 className='access-granted'>Your access has been granted</h5>
+              <div id='magic-img-container'></div>
               {(props.channelsGranted.length &&
                   <div className='exclusive-access-container'>
                     <h5>You have also been granted access to the exclusive channels associated with these purchases:</h5>
                     <h4 id='channels-granted'>{props.channelsGranted}</h4>
                   </div>) || ""}
-                  <InputForm discordId={props.discordId}/>
+                  <InputForm discordId={props.discordId} registeredUsername={props.registeredUsername} />
                   <a href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
             </div>
 
           )
         }
 
+        const AddEmailApp = (props) => {
+          return (
+            <div id='success-container'>
+              <h4 className='access-announcement'>Success!</h4>
+              <div id='magic-img-container'></div>
+              <div className='exclusive-access-container'>
+                <h5>Your access has been granted to these exclusive channels:</h5>
+                <h4 id='channels-granted'>{props.channelsGranted}</h4>
+                <div id='input-form-msg-container'>
+                  <h5>The email {props.registeredUsersEmail} was used to register your additional products.</h5>
+                  <h5>If you have bought additional dannygoldsmithmagic products with a different email you can register them using the registration portal channel inside the Guild</h5>
+                </div>
+              </div>
+              <a id='access-guild-link' href='https://discord.com/channels/881917878641770577/881917879283515454'>Access the Guild here</a>
+            </div>
+          )
+        }
 
-
-      ReactDOM.render(<App channelsGranted={channelsGranted} discordId={discordId} registeredUsersEmail={registeredUsersEmail}/>, document.getElementById("root"));
+      ReactDOM.render(
+        addEmailIndicator ?
+        <AddEmailApp
+          channelsGranted={channelsGranted}
+          registeredUsersEmail={registeredUsersEmail}
+        />
+        :
+        <App
+          channelsGranted={channelsGranted}
+          discordId={discordId}
+          registeredUsersEmail={registeredUsersEmail}
+          registeredUsername={registeredUsername}
+        />,
+        document.getElementById("root")
+      );
       </script>
     </body>
   </html>

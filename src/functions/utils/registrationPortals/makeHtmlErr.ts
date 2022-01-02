@@ -5,6 +5,7 @@ export const makeHtmlErr = (errMessage: string) => {
 <html>
   <head>
     <title>Registration Error</title>
+      <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/x-mark-16.ico">
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
       <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>

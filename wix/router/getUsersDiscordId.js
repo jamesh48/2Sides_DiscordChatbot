@@ -23,6 +23,16 @@ export const usersDiscordId = async (req) => {
     return wixData.update("purchased_candidates", toUpdate, suppressOptions);
   });
 
+  // If the user has purchased products with a different email, remove those discordId's as well.
+  const { items: additionalItemsToRemoveDiscordIDFrom } = await wixData
+    .query("purchased_candidates")
+    .eq("discordID", discordID)
+    .find(suppressOptions);
+
+  await Promise.each(additionalItemsToRemoveDiscordIDFrom, async (item) => {
+    const toUpdate = { ...item, discordID: null };
+    return wixData.update("purchased_candidates", toUpdate, suppressOptions);
+  });
   // Remove that the trace that the User purchased a Guild Subscription.
   await wixData.remove("purchased_candidates", _id, suppressOptions);
 

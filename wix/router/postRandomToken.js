@@ -14,9 +14,9 @@ export const postRandomToken = async (req) => {
     .eq("email", req.query.email)
     .find(suppressOptions);
 
-  // Update old refresh tokens and newly purchased Products
+  // Update old refresh tokens and newly purchased Guild Subscriptions
   const newlyPurchasedProducts = purchasedProductArr.filter((x) => {
-    // Newly Purchased Products
+    // Newly Purchased Guild Membership
     if (!x.discordID) {
       return x;
     }
@@ -28,7 +28,7 @@ export const postRandomToken = async (req) => {
   });
 
   let channelsToJoin = [];
-  /* -----------------> UPDATE DB <-------------------------- */
+  /*----------------->UPDATE DB<--------------------------*/
   await Promise.each(newlyPurchasedProducts, (item) => {
     const toUpdate = { ...item, discordID: tempRandToken };
 

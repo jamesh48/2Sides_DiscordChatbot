@@ -3,7 +3,7 @@ import { suppressOptions } from "../utils/constants.js";
 import { genDataObj } from "./eventRouterUtils/genDataObj.js";
 
 export const handlePlanPurchased = async (event) => {
-  /* ----------> Collect Member Info <---------- */
+  /*----------> Collect Member Info <----------*/
   const planName = event.order.planName;
   const paymentStatus = event.order.paymentStatus;
 

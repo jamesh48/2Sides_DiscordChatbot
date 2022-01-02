@@ -75,7 +75,7 @@ exports.handler = async (event: DiscordEventRequest): Promise<string> => {
     // POST request from error page, sends email with verification link.
     if (routeCommand === "redeem") {
       try {
-        await redeem(event.json.data.email, event.json.data.discordId);
+        await redeem(event.json.data.email, event.json.data.discordId, "");
         return "200";
       } catch (err: any) {
         return err.message;
@@ -84,7 +84,11 @@ exports.handler = async (event: DiscordEventRequest): Promise<string> => {
 
     if (routeCommand === "registerAdditionalEmail") {
       try {
-        await registerAdditionalEmail(event.json.data.email, event.json.data.discordId);
+        await registerAdditionalEmail(
+          event.json.data.email,
+          event.json.data.discordId,
+          ""
+        );
       } catch (err: any) {
         return err.message;
       }

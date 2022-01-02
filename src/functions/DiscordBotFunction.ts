@@ -4,8 +4,8 @@ import { Context, Callback } from "aws-lambda";
 import { DiscordEventRequest, DiscordEventResponse } from "Types";
 import { commandLambdaARN } from "./constants/EnvironmentProps";
 import { RouteCommand } from "staticTypes";
-import { makeHtmlErr } from "./makeHtmlErr";
-import { makeHtmlSuccess } from "./makeHtmlSuccess";
+import { makeHtmlErr } from "./utils/registrationPortals/makeHtmlErr";
+import { makeHtmlSuccess } from "./utils/registrationPortals/makeHtmlSuccess";
 
 const lambda = new Lambda();
 
@@ -107,7 +107,9 @@ export async function handler(
             .replace("The Guild", "")
         ),
         JSON.stringify(discordId),
-        ""
+        "",
+        "",
+        false
       );
       return htmlSuccessPage;
     }

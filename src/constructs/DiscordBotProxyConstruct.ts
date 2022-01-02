@@ -9,7 +9,7 @@ import {
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { Construct, Duration } from "@aws-cdk/core";
 import { Secret } from "@aws-cdk/aws-secretsmanager";
-import { makeHtmlErr } from "../functions/makeHtmlErr";
+import { makeHtmlErr } from "../functions/utils/registrationPortals/makeHtmlErr";
 
 export class DiscordBotProxyConstruct extends Construct {
   constructor(scope: Construct, id: string) {
@@ -115,6 +115,7 @@ export class DiscordBotProxyConstruct extends Construct {
               "code": "$input.params(\'code\')",\r\n\
               "discordId": "$input.params(\'discordId\')",\r\n\
               "email": "$input.params(\'email\')",\r\n\
+              "x": "$input.params(\'x\')",\r\n\
               "tempRandToken": "$input.params(\'tempRandToken\')"\r\n\
             }'
         },
@@ -138,7 +139,7 @@ export class DiscordBotProxyConstruct extends Construct {
             responseTemplates: {
               "text/html": makeHtmlErr(
                 // eslint-disable-next-line max-len
-                ".It is unlikely that you should see this error message. \\n If you do, it is because of an internal server error \\n It is possible that you were still registered for the Guild however. \\n If you still do not have access, please contact Danny.."
+                ".It is unlikely that you should see this error message. \\n If you do, it is because of an internal server error \\n It is possible that you were still registered for the Guild however. \\n If you still do not have access, please contact info@dannygoldsmithmagic.com.."
               )
             }
           }

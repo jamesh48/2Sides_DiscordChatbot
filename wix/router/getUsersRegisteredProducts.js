@@ -10,14 +10,16 @@ export const usersRegisteredProducts = async (req) => {
   const { items: purchasedProductArr } = await wixData
     .query("purchased_candidates")
     .eq("email", req.query.email)
-    .eq("discordID", req.query.tempRandToken)
     .find(suppressOptions);
 
+  // This may be redundant as the guild would be defined at this point.
   if (!purchasedProductArr.length) {
-    throw new Error("No New Products To Register");
+    throw new Error(
+      "404 No New Products To Register \n If you believe this is incorrect, please contact an Admin"
+    );
   }
 
-  /* ----------------->UPDATE DB<----------------- */
+  /*----------------->UPDATE DB<-----------------*/
   let finalPurchasedProductArr = [];
   await Promise.each(purchasedProductArr, async (item) => {
     const toUpdate = { ...item, discordID: req.query.discordId };

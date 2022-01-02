@@ -9,7 +9,7 @@ export const findGuildPurchase = async (userEmail) => {
     .find(suppressOptions);
 
   const guildPurchasedAndRegistered = guildPurchased.items.filter(
-    (x) => x.discordID && x.discordID.indexOf("xid_") === -1
+    (x) => x.discordID && x.discordID.split("_")[0] !== "xid"
   );
 
   if (guildPurchasedAndRegistered.length) {

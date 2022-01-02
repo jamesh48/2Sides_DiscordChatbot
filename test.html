@@ -1,7 +1,45 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Test</title>
-    <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/checkmark-16.ico"/>
+    <style>
+      * {
+        color: ivory;
+        margin: 0;
+        padding: 0;
+      }
+      #automation-fail-container {
+        background-color: darkslategray;
+        text-align: center;
+        margin: 0 15%;
+      }
+
+      h4,
+      p {
+        margin-bottom: 1%;
+      }
+
+      #automation-fail-announcement {
+        text-decoration: underline;
+      }
+
+
+      #automation-msg-container {
+        padding: 2%;
+      }
+    </style>
   </head>
+  <body>
+    <div id="automation-fail-container">
+      <div id="automation-msg-container">
+        <h4 id='automation-fail-announcement'>
+          There was an error that happened while attempting an automation, here are the
+          details I have on the error:
+        </h4>
+        <p>User</p>
+        <p>Discord ID</p>
+        <p>Automation Type</p>
+        <p>What was attempted</p>
+      </div>
+    </div>
+  </body>
 </html>

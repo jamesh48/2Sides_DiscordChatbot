@@ -10,3 +10,4 @@ export type DiscordRoleName = string;
 export type DiscordTokenType = string;
 export type AwsAPIKey = string;
 export type TempRandToken = string;
+export type Username = string;

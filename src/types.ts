@@ -21,6 +21,7 @@ export interface DiscordEventRequest {
   tempRandToken: TempRandToken;
   email: UserEmail;
   discordId: DiscordId;
+  x: string;
   // For CommandLambda only event.routeCommand->
   routeCommand: RouteCommand;
 }
@@ -41,6 +42,12 @@ export interface DiscordRequestData {
   discordId: DiscordId;
   apiKey: AwsAPIKey;
   channels: DiscordChannelsStr;
+  username: string;
+  errMessage: string;
+  errEmail: string;
+  errDiscordID: string;
+  errChannels: string;
+  automationType: string;
 }
 
 /**

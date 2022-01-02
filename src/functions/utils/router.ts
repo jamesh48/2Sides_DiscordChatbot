@@ -8,7 +8,7 @@ export const routePath = (event: DiscordEventRequest) => {
   if (event.code) {
     routeCommand = "accessCode";
     commandMethod = "GET";
-  } else if (event.json?.data?.channels && event.json?.data?.discordId) {
+  } else if (event.json?.data?.command === "enableNewChannels") {
     routeCommand = "enableNewChannels";
     commandMethod = "POST";
     protectedRoute = true;
@@ -29,6 +29,10 @@ export const routePath = (event: DiscordEventRequest) => {
   } else if (event.json?.data?.command === "registerAdditionalEmail") {
     routeCommand = "registerAdditionalEmail";
     commandMethod = "POST";
+  } else if (event.json?.data?.command === "automationFailAlert") {
+    routeCommand = "automationFailAlert";
+    commandMethod = "POST";
+    protectedRoute = true;
   } else {
     throw new Error("Not a valid path");
   }

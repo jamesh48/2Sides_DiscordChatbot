@@ -18,12 +18,16 @@
 
 **********************/
 import { resObj } from "./utils/constants.js";
-import { ok, badRequest } from "wix-http-functions";
+import { ok, badRequest, notFound, serverError } from "wix-http-functions";
 import { validateCredentials } from "./utils/validateCredentials.js";
 import { usersRegisteredProducts } from "./router/getUsersRegisteredProducts.js";
+import { verifyUser } from "./router/verifyUser";
 import { revokeGuildAccess } from "./router/postRevokeGuildAccess.js";
 import { postRandomToken } from "./router/postRandomToken.js";
+import { postAdditionalEmail } from "./router/postAdditionalEmail.js";
 import { usersDiscordId } from "./router/getUsersDiscordId.js";
+import { addBadge } from "./eventRouter/eventRouterUtils/addBadge.js";
+// import { updateLoop } from './eventRouter/eventRouterUtils/addBadge.js';
 
 export async function get_usersRegisteredProducts(req) {
   try {
@@ -32,17 +36,24 @@ export async function get_usersRegisteredProducts(req) {
     resObj.body.message = finalProductArr;
     return ok(resObj);
   } catch (err) {
-    resObj.body.error = err.message;
+    resObj.body.error = err.message.slice(3);
+    if (err.message.indexOf("400") > -1) {
+      return badRequest(resObj);
+    } else if (err.message.indexOf("404") > -1) {
+      return notFound(resObj);
+    } else if (err.message.indexOf("500") > -1) {
+      return serverError(resObj);
+    }
+
     return badRequest(resObj);
   }
 }
 
 export async function get_usersDiscordId(req) {
   try {
+    await validateCredentials(req);
     const discordId = await usersDiscordId(req);
-    console.log(discordId);
     resObj.body.message = discordId;
-    console.log(resObj);
     return ok(resObj);
   } catch (err) {
     console.log(err);
@@ -68,11 +79,64 @@ export async function post_randomToken(req) {
     const [tempRandToken, channelsToJoin] = await postRandomToken(req);
     resObj.body.tempRandToken = tempRandToken;
     resObj.body.channelsToJoin = channelsToJoin;
-    console.log(resObj);
     return ok(resObj);
   } catch (err) {
-    console.log(err.message);
-    resObj.body.error = err.message;
+    if (err.message.indexOf("404") !== -1) {
+      resObj.body.error =
+        "The email " + req.query.email + " does not exist on any paid Guild Membership";
+      return notFound(resObj);
+    } else if (err.message.indexOf("400") !== -1) {
+      resObj.body.error =
+        "The user with the email " + req.query.email + " is already registered.";
+      return badRequest(resObj);
+    } else if (err.message.indexOf("500") !== -1) {
+      resObj.body.error = "Unknown Error";
+      return serverError(resObj);
+    }
     return badRequest(resObj);
   }
 }
+
+export async function post_assignBadge(req) {
+  console.log("request email->", req.query.email);
+  await addBadge(req.query.email);
+
+  return ok(req);
+}
+
+export async function post_verifyUser(req) {
+  try {
+    await validateCredentials(req);
+    const finalProductArr = await verifyUser(req);
+    resObj.body.message = finalProductArr;
+    return ok(resObj);
+  } catch (err) {
+    resObj.body.error = err.message;
+    return notFound(resObj);
+  }
+}
+
+export async function post_additionalEmail(req) {
+  try {
+    await validateCredentials(req);
+    const [tempRandToken, channelsToJoin] = await postAdditionalEmail(req);
+    resObj.body.tempRandToken = tempRandToken;
+    resObj.body.channelsToJoin = channelsToJoin;
+    return ok(resObj);
+  } catch (err) {
+    resObj.body.error = err.message;
+    if (err.message.indexOf("404") !== -1) {
+      return notFound(resObj);
+    } else if (err.message.indexOf("400") !== -1) {
+      return badRequest(resObj);
+    } else if (err.message.indexOf("500") !== -1) {
+      return serverError(resObj);
+    }
+    return badRequest(resObj);
+  }
+}
+
+// export async function get_updateLoop(req) {
+//     await updateLoop();
+//     return ok(req);
+// }

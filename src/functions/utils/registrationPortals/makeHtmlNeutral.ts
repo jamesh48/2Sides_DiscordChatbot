@@ -1,10 +1,11 @@
-export const makeHtmlNeutral = (errMessage: string, discordId: string) => {
+export const makeHtmlNeutral = (errMessage: string, discordId: string, username: string) => {
   return (
     /* html */
     `<!DOCTYPE html>
       <html>
         <head>
           <title>Registration Portal</title>
+            <link rel="icon" type="image/png" href="https://discord-chatbot-icos.s3.amazonaws.com/questionMark.ico">
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
             <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
@@ -42,7 +43,8 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string) => {
                 padding: 2% 0;
                 text-rendering: geometricPrecision;
                 background-color: floralwhite;
-                border: 2px solid black;
+                border: .5px solid black;
+                box-shadow: white 0.25rem 0.25rem 0.5rem;
               }
 
               h3 {
@@ -124,6 +126,7 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string) => {
           <script type='text/babel'>
             const errMessage = ${errMessage};
             const discordId = ${discordId};
+            const username = ${username};
 
             const InputForm = (props) => {
               const [emailVal, setEmailVal] = React.useState("");
@@ -179,11 +182,17 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string) => {
                       data: {
                         discordId: props.discordId,
                         email: memoedEmailVal,
+                        username: props.username,
                         command: 'redeem'
                       }
                     }
                   }).then((response) => {
-                      if (response.data.indexOf("not found") > -1 || response.data.indexOf("already registered") > -1) {
+                      // 404 and 400 respectively.
+                      if (
+                        response.data.indexOf("does not exist") > -1
+                        || response.data.indexOf("already registered") > -1
+                        || response.data.indexOf('Unknown Error') > -1
+                        ) {
                         setValidationContainerMsg(["error", response.data]);
                       } else {
                         setValidationContainerMsg(["success", response.data])
@@ -218,12 +227,12 @@ export const makeHtmlNeutral = (errMessage: string, discordId: string) => {
                       .map((x, i) => <p key={i} className='error-detail'>{x}</p>)
                   }
                   </div>
-                  <InputForm discordId={props.discordId}/>
+                  <InputForm discordId={props.discordId} username={props.username}/>
               </div>
                 )
             }
 
-            ReactDOM.render(<App errMessage={errMessage} discordId={discordId}/>, document.getElementById("root"));
+            ReactDOM.render(<App errMessage={errMessage} discordId={discordId} username={username}/>, document.getElementById("root"));
 
             </script>
         </body>
