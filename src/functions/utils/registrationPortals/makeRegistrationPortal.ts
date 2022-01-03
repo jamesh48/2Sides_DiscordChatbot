@@ -141,20 +141,14 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
             const username = ${username};
 
             const InputForm = (props) => {
-              const [emailVal, setEmailVal] = React.useState("");
-              const [validationContainerMsg, setValidationContainerMsg] = React.useState([null, ""]);
+
+              const [emailVal, setEmailVal] = React.useState('');
               const [submitting, setSubmitting] = React.useState(false);
-              const [countDownTimer, setCountDownTimer] = React.useState(30);
+              const [validationMsgArr, setValidationMsgArr] = React.useState([]);
 
               const handleChange = () => {
                 setEmailVal(event.target.value);
               };
-
-              React.useEffect(() => {
-                if (validationContainerMsg[0] === 'error' || validationContainerMsg[0] === null) {
-                  setSubmitting(false);
-                }
-              }, [validationContainerMsg]);
 
               React.useEffect(() => {
                 if (submitting === true) {
@@ -162,29 +156,9 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
                 }
               }, [submitting])
 
-
-              React.useEffect(() => {
-                if (countDownTimer === 0) {
-                  window.close();
-                }
-              }, [countDownTimer]);
-
-              const startSelfDestructSequence = () => {
-                setInterval(() => {
-                    console.log('interval set...', countDownTimer);
-                    setCountDownTimer(ex => ex - 1);
-                  }, 1000);
-              };
-
-              React.useEffect(() => {
-                if (validationContainerMsg[0] === "success") {
-                  startSelfDestructSequence()
-                }
-              }, [validationContainerMsg]);
-
               const handleSubmit = () => {
                 event.preventDefault();
-                const memoedEmailVal = emailVal;
+                const savedEmailVal = emailVal;
                   setSubmitting(true);
 
                   axios({
@@ -193,7 +167,7 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
                     data: {
                       data: {
                         discordId: props.discordId,
-                        email: memoedEmailVal,
+                        email: savedEmailVal,
                         username: props.username,
                         command: 'registerAdditionalEmail'
                       }
@@ -213,19 +187,21 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
               };
 
               return (
-                <form onSubmit={handleSubmit} id='error-redeemer-form'>
-                  {validationContainerMsg[0] === 'error' && <div id='validation-container'>{validationContainerMsg[1]}</div>}
-                  {validationContainerMsg[0] === 'success' ?
-                  <div id='success-container'>
-                    <div id='validation-container'>{validationContainerMsg[1]}</div>
-                    <p>Window will close in {countDownTimer} seconds</p>
-                  </div> :
-                    (<div id='redeemer-form-inputs'>
-                      <input className='redeemer-input' id='redeemer-input-text' type='text' value={emailVal} onChange={handleChange} disabled={!!submitting}></input>
-                      <input className='redeemer-input' id='redeemer-input-submit' type='submit' disabled={!!submitting}></input>
-                    </div>)
+                <div>
+                  {validationMsgArr.length &&
+                    <div className='validation-msg-container'>
+                      {validationMsgArr.map((x, i) => {
+                        return <p key={i} className='validation-msg'>{x}</p>
+                      })}
+                    </div> || null
                   }
-                </form>
+                  <form id='input-form' onSubmit={handleSubmit}>
+                    <div id='inputs-container'>
+                      <input className='input-form-input' id='input-form-text' type='text' onChange={handleChange} value={emailVal} disabled={!!submitting}></input>
+                      <input className='input-form-input' id='input-form-submit' type='submit' disabled={!!submitting}></input>
+                    </div>
+                  </form>
+                </div>
               )
             }
 
