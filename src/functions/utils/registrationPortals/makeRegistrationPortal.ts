@@ -22,6 +22,7 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
               }
 
               html {
+                text-rendering: geometricPrecision;
                 background: rgb(0,212,255);
                 background: -moz-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
                 background: -webkit-radial-gradient(circle, rgba(0,212,255,1) 30%, rgba(2,0,36,1) 47%, rgba(0,0,232,1) 89%);
@@ -47,89 +48,75 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
                 width: 70%;
               }
 
-              #registration-portal-container{
+              #registration-portal-container,
+              #validation-msg-container,
+              #input-form-container,
+              #input-form {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 width: 100%;
+              }
+
+              #registration-portal-container{
+                width: 100%;
                 padding: 2% 0;
-                text-rendering: geometricPrecision;
                 background-color: floralwhite;
                 border: .5px solid black;
-                box-shadow: white 0.25rem 0.25rem 0.5rem;
+                box-shadow: darkcyan 0.25rem 0.25rem 0.5rem;
               }
 
               h3 {
                 text-decoration: underline;
                 margin-bottom: .5%;
                 font-size: 1.5vmax;
+                text-decoration-thickness: from-font;
+                text-underline-offset: .5rem;
               }
 
-              #error-message-container {
+              #inputs-container {
                 display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: 95%;
-                text-align: center;
-                padding: 0 2%;
+                width: 50%;
+                justify-content: center;
               }
 
-              .error-detail {
-                font-size: 1.25vmax;
-              }
-
-              #error-redeemer-form {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-              }
-
-              #validation-container {
-                padding: 1.5% 0;
-              }
-
-              #redeemer-form-inputs {
-                display: flex;
-                width: 30%;
-              }
-
-              .redeemer-input {
+              .input-form-input {
                 color: ivory;
               }
 
-              #redeemer-input-text {
-                flex: 1;
+              #input-form-text {
                 background-color: darkcyan;
                 text-align: center;
+                flex: .6;
               }
 
 
-              #redeemer-input-text:focus {
+              #input-form-text:focus {
                 background-color: green;
               }
 
-              #redeemer-input-text:disabled {
+              #input-form-text:disabled {
                 background-color: gray;
               }
 
-              #redeemer-input-submit {
+              #input-form-submit {
+                flex: .1;
                 background-color: darkslategray;
               }
 
-              #redeemer-input-submit:hover {
+              #input-form-submit:hover {
                 cursor: pointer;
                 background-color: green;
               }
 
-              #redeemer-input-submit:disabled {
+              #input-form-submit:disabled {
                 background-color: gray;
               }
 
-              #success-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+              .valiation-msg-container,
+              .validation-msg {
+                margin: 0;
+                margin-bottom: 1.25%;
               }
           </style>
         </head>
@@ -173,21 +160,37 @@ export const makeRegistrationPortal = (discordId: DiscordId, username: Username)
                       }
                     }
                   }).then((response) => {
-                      // 404 and 400 respectively.
-                      if (
-                        response.data.indexOf("does not exist") > -1
-                        || response.data.indexOf("already registered") > -1
-                        || response.data.indexOf('Unknown Error') > -1
-                        ) {
-                        setValidationContainerMsg(["error", response.data]);
+                    console.log(response.data);
+                    if (response.data.indexOf('200') > -1) {
+                      setValidationMsgArr((ex) => {
+                      if (ex.indexOf(response.data.replace('200', '')) === -1) {
+                          ex.push(response.data.replace('200', ''));
+                        }
+                          return ex;
+                        });
+                      } else if (response.data.indexOf('400') > -1 || response.data.indexOf('404') > -1) {
+                        setValidationMsgArr(ex => {
+                          if (ex.indexOf(response.data.replace('400', '').replace('404', '')) === -1) {
+                            ex.push(response.data.replace('400', '').replace('404', ''));
+                          }
+                          return ex;
+                        });
                       } else {
-                        setValidationContainerMsg(["success", response.data])
+                        setValidationMsgArr(ex => {
+                          const newUnknownMsg = 'There was an unknown error';
+                          if (ex.indexOf(newUnknownMsg) === -1) {
+                            ex.push('There was an unknown error')
+                          }
+                          return ex;
+                        });
                       }
-                    });
+                  }).finally(() => {
+                    setSubmitting(false);
+                  });
               };
 
               return (
-                <div>
+                <div id='input-form-container'>
                   {validationMsgArr.length &&
                     <div className='validation-msg-container'>
                       {validationMsgArr.map((x, i) => {

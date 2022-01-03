@@ -1,7 +1,7 @@
 import { CodeFromDiscord } from "types/staticTypes";
 import { URLSearchParams } from "url";
 
-export const getAccessCodeParams = (code: CodeFromDiscord, suffix: string | null) => {
+export const getAccessCodeParams = (code: CodeFromDiscord, suffix: string) => {
   const {
     discordClientID,
     discordClientSecret
@@ -15,7 +15,7 @@ export const getAccessCodeParams = (code: CodeFromDiscord, suffix: string | null
     client_secret: discordClientSecret,
     code: code,
     grant_type: "authorization_code",
-    redirect_uri: suffix ? APIGatewayURL + suffix : APIGatewayURL,
+    redirect_uri: APIGatewayURL + suffix,
     scope: "email"
   });
 

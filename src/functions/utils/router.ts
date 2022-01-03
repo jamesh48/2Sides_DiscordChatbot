@@ -30,7 +30,7 @@ export const routePath = (event: DiscordEventRequest) => {
     routeCommand = "registrationPortal";
     commandMethod = "GET";
     // Todo- Change this to event.command in discord (requires changing the embed as well).
-  } else if (event.code) {
+  } else if (event.command === "accessCode") {
     routeCommand = "accessCode";
     commandMethod = "GET";
   } else if (event.json?.data?.command === "automationFailAlert") {
