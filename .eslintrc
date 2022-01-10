@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest/globals": true
   },
   "extends": ["google"],
   "parser": "@typescript-eslint/parser",
@@ -9,7 +10,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "jest"],
   "rules": {
     "operator-linebreak": ["error", "before"],
     "indent": [2, 2, { "SwitchCase": 1 }],

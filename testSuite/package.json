@@ -1,0 +1,19 @@
+{
+  "name": "testsuite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "ts-jest": "^27.1.2"
+  },
+  "dependencies": {
+    "@types/jest": "^27.4.0"
+  }
+}
